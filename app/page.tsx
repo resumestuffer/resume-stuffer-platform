@@ -1,102 +1,629 @@
-import Image from "next/image";
+import { Suspense } from "react";
+import { prisma } from "@/lib/prisma";
+import Link from "next/link";
+import {
+  Search,
+  TrendingUp,
+  Clock,
+  DollarSign,
+  Users,
+  Award,
+  Calculator,
+} from "lucide-react";
+import EarningCalculator from "./EarningCalculator";
+import MobileHeader from "./MobileHeader";
 
-export default function Home() {
+const certifications = await prisma.certification.findMany({
+  where: {
+    isFeatured: true,
+  },
+  select: {
+    id: true,
+    title: true,
+    slug: true,
+    description: true,
+    price: true,
+    salaryIncrease: true,
+    studyTimeHours: true,
+    hasGuide: true,
+    enrollUrl: true,
+    icon: true,
+    category: {
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+      },
+    },
+    provider: {
+      select: {
+        id: true,
+        name: true,
+        slug: true,
+      },
+    },
+  },
+  take: 6,
+  orderBy: {
+    salaryIncrease: "desc",
+  },
+});
+
+async function getFeaturedCertifications() {
+  try {
+    const certifications = await prisma.certification.findMany({
+      where: {
+        isFeatured: true,
+      },
+      select: {
+        id: true,
+        title: true,
+        slug: true,
+        description: true,
+        price: true,
+        salaryIncrease: true,
+        studyTimeHours: true,
+        hasGuide: true,
+        enrollUrl: true,
+        icon: true,
+        category: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+        provider: {
+          select: {
+            id: true,
+            name: true,
+            slug: true,
+          },
+        },
+      },
+      take: 6,
+      orderBy: {
+        salaryIncrease: "desc",
+      },
+    });
+    return certifications;
+  } catch (error) {
+    console.error("Error fetching certifications:", error);
+    return [];
+  }
+}
+
+async function getStats() {
+  try {
+    const totalCerts = await prisma.certification.count();
+    const avgSalaryIncrease = await prisma.certification.aggregate({
+      _avg: {
+        salaryIncrease: true,
+      },
+    });
+    const totalProviders = await prisma.provider.count();
+
+    return {
+      totalCertifications: totalCerts,
+      averageSalaryIncrease: Math.round(
+        avgSalaryIncrease._avg.salaryIncrease || 0
+      ),
+      totalProviders,
+    };
+  } catch (error) {
+    console.error("Error fetching stats:", error);
+    return {
+      totalCertifications: 0,
+      averageSalaryIncrease: 0,
+      totalProviders: 0,
+    };
+  }
+}
+
+// Homepage component
+export default async function HomePage() {
+  const featuredCertifications = await getFeaturedCertifications();
+  const stats = await getStats();
+
   return (
-    <div className="font-sans grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="font-mono list-inside list-decimal text-sm/6 text-center sm:text-left">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] font-mono font-semibold px-1 py-0.5 rounded">
-              app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div
+      className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50"
+      style={{ fontFamily: "Work Sans, system-ui, sans-serif" }}
+    >
+      {/* Header */}
+      <MobileHeader />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+      {/* Hero Section */}
+      <section className="relative px-4 sm:px-6 lg:px-8 py-12 lg:py-20">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            {/* Left Column - Content */}
+            <div className="text-center lg:text-left">
+              <h1
+                className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight"
+                style={{
+                  fontFamily: "Work Sans, system-ui, sans-serif",
+                  fontWeight: 700,
+                }}
+              >
+                Advance Your Career with{" "}
+                <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+                  Strategic Certifications
+                </span>
+              </h1>
+              <p className="mt-6 text-lg sm:text-xl text-slate-600 leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                Discover high-impact certifications that can increase your
+                salary by $8,000-$32,000 annually. Get expert guides, ROI
+                calculations, and career advancement strategies.
+              </p>
+
+              {/* Search Bar */}
+              <div className="mt-8 max-w-lg mx-auto lg:mx-0">
+                <form
+                  action="/certifications"
+                  method="GET"
+                  className="flex flex-col sm:flex-row gap-3"
+                >
+                  <div className="flex-1">
+                    <input
+                      type="text"
+                      name="search"
+                      placeholder="Search certifications..."
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder-slate-500"
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="px-6 py-3 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors flex items-center justify-center gap-2"
+                  >
+                    <Search size={20} />
+                    <span>Search</span>
+                  </button>
+                </form>
+              </div>
+
+              {/* CTA Buttons */}
+              <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+                <Link
+                  href="/certifications"
+                  className="px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors text-center"
+                >
+                  Browse Certifications
+                </Link>
+                <Link
+                  href="#earning-calculator"
+                  className="px-8 py-4 border-2 border-blue-600 text-blue-600 font-semibold rounded-lg hover:bg-blue-50 transition-colors text-center"
+                >
+                  See Your Earning Potential
+                </Link>
+              </div>
+            </div>
+
+            {/* Right Column - Stats Cards */}
+            <div className="grid grid-cols-2 gap-4 sm:gap-6 mt-8 lg:mt-0">
+              <div className="bg-white rounded-xl p-4 sm:p-6 shadow-lg border border-slate-200 flex items-center justify-center min-h-[100px] sm:min-h-[120px]">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="p-1.5 sm:p-2 bg-blue-100 rounded-lg flex-shrink-0">
+                    <Award className="w-4 h-4 sm:w-6 sm:h-6 text-blue-600" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-lg sm:text-2xl font-bold text-slate-900">
+                      {stats.totalCertifications > 5
+                        ? `${Math.max(
+                            stats.totalCertifications - 3,
+                            stats.totalCertifications - 1
+                          )}+`
+                        : `${stats.totalCertifications}+`}
+                    </p>
+                    <p className="text-sm sm:text-base text-slate-600">
+                      Certifications
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-xl p-4 sm:p-6 shadow-lg border border-slate-200 flex items-center justify-center min-h-[100px] sm:min-h-[120px]">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="p-1.5 sm:p-2 bg-green-100 rounded-lg flex-shrink-0">
+                    <DollarSign className="w-4 h-4 sm:w-6 sm:h-6 text-green-600" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-lg sm:text-2xl font-bold text-slate-900">
+                      ${stats.averageSalaryIncrease.toLocaleString()}
+                    </p>
+                    <p className="text-sm sm:text-base text-slate-600">
+                      Avg. Salary Boost
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-xl p-4 sm:p-6 shadow-lg border border-slate-200 flex items-center justify-center min-h-[100px] sm:min-h-[120px]">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="p-1.5 sm:p-2 bg-purple-100 rounded-lg flex-shrink-0">
+                    <Users className="w-4 h-4 sm:w-6 sm:h-6 text-purple-600" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-lg sm:text-2xl font-bold text-slate-900">
+                      Multiple
+                    </p>
+                    <p className="text-sm sm:text-base text-slate-600">
+                      Industries
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-white rounded-xl p-4 sm:p-6 shadow-lg border border-slate-200 flex items-center justify-center min-h-[100px] sm:min-h-[120px]">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <div className="p-1.5 sm:p-2 bg-cyan-100 rounded-lg flex-shrink-0">
+                    <TrendingUp className="w-4 h-4 sm:w-6 sm:h-6 text-cyan-600" />
+                  </div>
+                  <div className="text-left">
+                    <p className="text-lg sm:text-2xl font-bold text-slate-900">
+                      Entry to Expert
+                    </p>
+                    <p className="text-sm sm:text-base text-slate-600">
+                      Levels
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      </section>
+
+      {/* Categories Section */}
+      <section className="px-4 sm:px-6 lg:px-8 py-16 bg-white">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2
+              className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4"
+              style={{
+                fontFamily: "Work Sans, system-ui, sans-serif",
+                fontWeight: 700,
+              }}
+            >
+              Explore by Category
+            </h2>
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+              Find certifications in your field or discover new career paths
+              with high earning potential.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
+            {[
+              { name: "Technology", icon: "💻", filter: "technology" },
+              {
+                name: "Digital Marketing",
+                icon: "📱",
+                filter: "digital-marketing",
+              },
+              {
+                name: "Data & Analytics",
+                icon: "📊",
+                filter: "data-analytics",
+              },
+              { name: "Business", icon: "💼", filter: "business-productivity" },
+              {
+                name: "Design & Creative",
+                icon: "🎨",
+                filter: "design-creative",
+              },
+            ].map((category) => (
+              <Link
+                key={category.filter}
+                href={`/certifications?filter=${category.filter}`}
+                className="group p-4 sm:p-6 bg-slate-50 border-2 border-slate-200 rounded-xl hover:border-blue-300 hover:bg-blue-50 transition-all text-center sm:block"
+              >
+                <div className="flex sm:flex-col items-center sm:items-center gap-3 sm:gap-0">
+                  <div className="text-2xl sm:text-4xl sm:mb-3 flex-shrink-0">
+                    {category.icon}
+                  </div>
+                  <h3 className="font-semibold text-slate-900 group-hover:text-blue-700 transition-colors text-sm sm:text-base">
+                    {category.name}
+                  </h3>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Featured Certifications */}
+      <section className="px-4 sm:px-6 lg:px-8 py-16 bg-slate-50">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2
+              className="text-3xl lg:text-4xl font-bold text-slate-900 mb-4"
+              style={{
+                fontFamily: "Work Sans, system-ui, sans-serif",
+                fontWeight: 700,
+              }}
+            >
+              Featured Certifications
+            </h2>
+            <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+              High-impact certifications with proven ROI and career advancement
+              potential.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <Suspense fallback={<div>Loading certifications...</div>}>
+              {featuredCertifications.map((cert) => (
+                <div
+                  key={cert.id}
+                  className="bg-white rounded-xl p-6 shadow-lg border border-slate-200 hover:shadow-xl transition-all hover:transform hover:-translate-y-1 flex flex-col"
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="text-3xl">{cert.icon}</div>
+                    <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+                      {cert.category.name}
+                    </span>
+                  </div>
+
+                  <h3 className="text-xl font-bold text-slate-900 mb-2 line-clamp-2">
+                    {cert.title}
+                  </h3>
+                  <p className="text-slate-600 mb-2 font-medium">
+                    {cert.provider.name}
+                  </p>
+                  <p className="text-slate-600 text-sm mb-4 line-clamp-3 flex-grow">
+                    {cert.description}
+                  </p>
+
+                  {/* Stats Grid - UPDATED TO MATCH CERTIFICATION PAGE */}
+                  <div className="grid grid-cols-3 gap-4 mb-6 p-4 bg-slate-50 rounded-lg">
+                    <div className="text-center">
+                      <div className="flex items-center justify-center mb-1">
+                        <DollarSign className="w-4 h-4 text-slate-500" />
+                      </div>
+                      <p className="text-xs text-slate-500 mb-1">Cost</p>
+                      <p className="font-semibold text-slate-900 text-sm">
+                        {cert.price && cert.price > 0
+                          ? `$${(cert.price / 100).toLocaleString()}`
+                          : "Free"}
+                      </p>
+                    </div>
+                    <div className="text-center">
+                      <div className="flex items-center justify-center mb-1">
+                        <TrendingUp className="w-4 h-4 text-green-600" />
+                      </div>
+                      <p className="text-xs text-slate-500 mb-1">
+                        Salary Increase (est.)
+                      </p>
+                      <p className="font-semibold text-green-600 text-sm">
+                        +${cert.salaryIncrease.toLocaleString()}/yr
+                      </p>
+                    </div>
+                    <div className="text-center">
+                      <div className="flex items-center justify-center mb-1">
+                        <Clock className="w-4 h-4 text-slate-500" />
+                      </div>
+                      <p className="text-xs text-slate-500 mb-1">Study Time</p>
+                      <p className="font-semibold text-slate-900 text-sm">
+                        {cert.studyTimeHours}h
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="flex gap-3 mt-auto">
+                    <a
+                      href={cert.enrollUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors text-center"
+                    >
+                      Enroll Now
+                    </a>
+                    {cert.hasGuide && (
+                      <Link
+                        href={`/certifications/${cert.slug}`}
+                        className="px-4 py-2 border border-slate-300 text-slate-700 text-sm font-medium rounded-lg hover:bg-slate-50 transition-colors"
+                      >
+                        Learn More
+                      </Link>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </Suspense>
+          </div>
+
+          <div className="text-center mt-12">
+            <Link
+              href="/certifications"
+              className="inline-flex items-center gap-2 px-8 py-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              View All Certifications
+              <TrendingUp size={20} />
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Earning Potential Calculator Section */}
+      <EarningCalculator />
+
+      {/* Email Signup */}
+      <section className="px-4 sm:px-6 lg:px-8 py-16 bg-slate-900">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2
+            className="text-3xl lg:text-4xl font-bold text-white mb-4"
+            style={{
+              fontFamily: "Work Sans, system-ui, sans-serif",
+              fontWeight: 700,
+            }}
+          >
+            Stay Ahead of the Curve
+          </h2>
+          <p className="text-xl text-slate-300 mb-8">
+            Get the latest certification trends, salary insights, and career
+            advancement strategies delivered to your inbox.
+          </p>
+
+          <form className="max-w-lg mx-auto flex flex-col sm:flex-row gap-4">
+            <input
+              type="email"
+              placeholder="Enter your email"
+              className="flex-1 px-4 py-3 rounded-lg border border-slate-600 bg-slate-800 text-white placeholder-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+            <button
+              type="submit"
+              className="px-8 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors"
+            >
+              Subscribe
+            </button>
+          </form>
+
+          <p className="text-sm text-slate-400 mt-4">
+            No spam, unsubscribe anytime. We respect your privacy.
+          </p>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-slate-800 text-white px-4 sm:px-6 lg:px-8 py-12">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div>
+              <div className="flex items-center space-x-2 mb-4">
+                <div className="text-2xl">📄</div>
+                <span className="text-xl font-bold">Resume Stuffer</span>
+              </div>
+              <p className="text-slate-300">
+                Empowering professionals to advance their careers through
+                strategic certifications.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-4 text-blue-400">Categories</h3>
+              <ul className="space-y-2 text-slate-300">
+                <li>
+                  <Link
+                    href="/certifications?filter=technology"
+                    className="hover:text-blue-400 transition-colors"
+                  >
+                    Technology
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/certifications?filter=digital-marketing"
+                    className="hover:text-blue-400 transition-colors"
+                  >
+                    Digital Marketing
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/certifications?filter=data-analytics"
+                    className="hover:text-blue-400 transition-colors"
+                  >
+                    Data & Analytics
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/certifications?filter=business-productivity"
+                    className="hover:text-blue-400 transition-colors"
+                  >
+                    Business
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/certifications?filter=design-creative"
+                    className="hover:text-blue-400 transition-colors"
+                  >
+                    Design & Creative
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-4 text-blue-400">Resources</h3>
+              <ul className="space-y-2 text-slate-300">
+                <li>
+                  <Link
+                    href="/certifications"
+                    className="hover:text-blue-400 transition-colors"
+                  >
+                    All Certifications
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/contact"
+                    className="hover:text-blue-400 transition-colors"
+                  >
+                    Get Support
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="#earning-calculator"
+                    className="hover:text-blue-400 transition-colors"
+                  >
+                    Earning Calculator
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-4 text-blue-400">Company</h3>
+              <ul className="space-y-2 text-slate-300">
+                <li>
+                  <Link
+                    href="/about"
+                    className="hover:text-blue-400 transition-colors"
+                  >
+                    About Us
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/contact"
+                    className="hover:text-blue-400 transition-colors"
+                  >
+                    Contact
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/privacy"
+                    className="hover:text-blue-400 transition-colors"
+                  >
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/terms"
+                    className="hover:text-blue-400 transition-colors"
+                  >
+                    Terms of Service
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="border-t border-slate-700 mt-8 pt-8 text-center">
+            <p className="text-slate-400">
+              &copy; 2025 Resume Stuffer. All rights reserved.
+              <span className="text-sm ml-2">
+                Affiliate links may earn us a commission.
+              </span>
+            </p>
+          </div>
+        </div>
       </footer>
     </div>
   );
