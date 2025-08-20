@@ -42,7 +42,10 @@ export async function GET() {
   } catch (error) {
     console.error("Failed to fetch featured certifications:", error);
     return NextResponse.json(
-      { error: "Failed to fetch certifications" },
+      {
+        error: "Failed to fetch certifications",
+        details: error instanceof Error ? error.message : "Unknown error",
+      },
       { status: 500 }
     );
   }
