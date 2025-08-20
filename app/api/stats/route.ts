@@ -7,10 +7,25 @@ const fallbackStats = {
   totalProviders: 15,
 };
 
+async function connectWithRetry(retries = 3) {
+  const { prisma } = await import("@/lib/prisma");
+
+  for (let i = 0; i < retries; i++) {
+    try {
+      await prisma.$connect();
+      return prisma;
+    } catch (error) {
+      console.log(`Connection attempt ${i + 1} failed:`, error);
+      if (i === retries - 1) throw error;
+      await new Promise((resolve) => setTimeout(resolve, 1000 * (i + 1)));
+    }
+  }
+  throw new Error("Failed to connect after all retries");
+}
+
 export async function GET() {
   try {
-    // Try to import and use Prisma
-    const { prisma } = await import("@/lib/prisma");
+    const prisma = await connectWithRetry();
 
     const totalCerts = await prisma.certification.count();
     const avgSalaryIncrease = await prisma.certification.aggregate({
@@ -19,6 +34,8 @@ export async function GET() {
       },
     });
     const totalProviders = await prisma.provider.count();
+
+    await prisma.$disconnect();
 
     return NextResponse.json({
       totalCertifications: totalCerts || 0,
@@ -29,7 +46,6 @@ export async function GET() {
     });
   } catch (error) {
     console.error("Database connection failed, using fallback stats:", error);
-    // Return fallback data instead of error
     return NextResponse.json(fallbackStats);
   }
 }

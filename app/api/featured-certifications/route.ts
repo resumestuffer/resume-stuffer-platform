@@ -49,12 +49,80 @@ const fallbackCertifications = [
     category: { id: 1, name: "Technology", slug: "technology", icon: "💻" },
     provider: { id: 1, name: "Amazon Web Services", slug: "aws" },
   },
+  {
+    id: 4,
+    title: "Google Data Analytics Professional Certificate",
+    slug: "google-data-analytics",
+    description:
+      "Learn data analytics fundamentals with hands-on projects using real-world datasets.",
+    price: 3900,
+    salaryIncrease: 18000,
+    studyTimeHours: 180,
+    hasGuide: true,
+    enrollUrl:
+      "https://www.coursera.org/professional-certificates/google-data-analytics",
+    category: {
+      id: 3,
+      name: "Data Analytics",
+      slug: "data-analytics",
+      icon: "📊",
+    },
+    provider: { id: 2, name: "Google", slug: "google" },
+  },
+  {
+    id: 5,
+    title: "Project Management Professional (PMP)",
+    slug: "pmp-certification",
+    description:
+      "Industry-recognized project management certification for experienced professionals.",
+    price: 40500,
+    salaryIncrease: 28000,
+    studyTimeHours: 120,
+    hasGuide: true,
+    enrollUrl: "https://www.pmi.org/certifications/project-management-pmp",
+    category: {
+      id: 4,
+      name: "Business",
+      slug: "business-productivity",
+      icon: "💼",
+    },
+    provider: { id: 3, name: "Project Management Institute", slug: "pmi" },
+  },
+  {
+    id: 6,
+    title: "Certified Information Systems Security Professional (CISSP)",
+    slug: "cissp-certification",
+    description:
+      "Advanced cybersecurity certification for senior security professionals.",
+    price: 74900,
+    salaryIncrease: 35000,
+    studyTimeHours: 150,
+    hasGuide: true,
+    enrollUrl: "https://www.isc2.org/Certifications/CISSP",
+    category: { id: 1, name: "Technology", slug: "technology", icon: "💻" },
+    provider: { id: 4, name: "(ISC)² ", slug: "isc2" },
+  },
 ];
+
+async function connectWithRetry(retries = 3) {
+  const { prisma } = await import("@/lib/prisma");
+
+  for (let i = 0; i < retries; i++) {
+    try {
+      await prisma.$connect();
+      return prisma;
+    } catch (error) {
+      console.log(`Connection attempt ${i + 1} failed:`, error);
+      if (i === retries - 1) throw error;
+      await new Promise((resolve) => setTimeout(resolve, 1000 * (i + 1)));
+    }
+  }
+  throw new Error("Failed to connect after all retries");
+}
 
 export async function GET() {
   try {
-    // Try to import and use Prisma
-    const { prisma } = await import("@/lib/prisma");
+    const prisma = await connectWithRetry();
 
     const certifications = await prisma.certification.findMany({
       where: {
@@ -92,10 +160,10 @@ export async function GET() {
       },
     });
 
+    await prisma.$disconnect();
     return NextResponse.json(certifications);
   } catch (error) {
     console.error("Database connection failed, using fallback data:", error);
-    // Return fallback data instead of error
     return NextResponse.json(fallbackCertifications);
   }
 }
