@@ -1,5 +1,6 @@
-import { Suspense } from "react";
-import { prisma } from "@/lib/prisma";
+"use client";
+
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import {
   Search,
@@ -13,117 +14,44 @@ import {
 import EarningCalculator from "./EarningCalculator";
 import MobileHeader from "./MobileHeader";
 
-const certifications = await prisma.certification.findMany({
-  where: {
-    isFeatured: true,
-  },
-  select: {
-    id: true,
-    title: true,
-    slug: true,
-    description: true,
-    price: true,
-    salaryIncrease: true,
-    studyTimeHours: true,
-    hasGuide: true,
-    enrollUrl: true,
-    icon: true,
-    category: {
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-      },
-    },
-    provider: {
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-      },
-    },
-  },
-  take: 6,
-  orderBy: {
-    salaryIncrease: "desc",
-  },
-});
-
-async function getFeaturedCertifications() {
-  try {
-    const certifications = await prisma.certification.findMany({
-      where: {
-        isFeatured: true,
-      },
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        description: true,
-        price: true,
-        salaryIncrease: true,
-        studyTimeHours: true,
-        hasGuide: true,
-        enrollUrl: true,
-        icon: true,
-        category: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
-        },
-        provider: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
-        },
-      },
-      take: 6,
-      orderBy: {
-        salaryIncrease: "desc",
-      },
-    });
-    return certifications;
-  } catch (error) {
-    console.error("Error fetching certifications:", error);
-    return [];
-  }
-}
-
-async function getStats() {
-  try {
-    const totalCerts = await prisma.certification.count();
-    const avgSalaryIncrease = await prisma.certification.aggregate({
-      _avg: {
-        salaryIncrease: true,
-      },
-    });
-    const totalProviders = await prisma.provider.count();
-
-    return {
-      totalCertifications: totalCerts,
-      averageSalaryIncrease: Math.round(
-        avgSalaryIncrease._avg.salaryIncrease || 0
-      ),
-      totalProviders,
-    };
-  } catch (error) {
-    console.error("Error fetching stats:", error);
-    return {
-      totalCertifications: 0,
-      averageSalaryIncrease: 0,
-      totalProviders: 0,
-    };
-  }
-}
-
 // Homepage component
-export default async function HomePage() {
-  const featuredCertifications = await getFeaturedCertifications();
-  const stats = await getStats();
+export default function HomePage() {
+  const [featuredCertifications, setFeaturedCertifications] = useState<any[]>(
+    []
+  );
+  const [stats, setStats] = useState({
+    totalCertifications: 0,
+    averageSalaryIncrease: 0,
+    totalProviders: 0,
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    Promise.all([
+      fetch("/api/featured-certifications").then((res) => res.json()),
+      fetch("/api/stats").then((res) => res.json()),
+    ])
+      .then(([certsData, statsData]) => {
+        setFeaturedCertifications(certsData);
+        setStats(statsData);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-slate-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -359,7 +287,7 @@ export default async function HomePage() {
                   className="bg-white rounded-xl p-6 shadow-lg border border-slate-200 hover:shadow-xl transition-all hover:transform hover:-translate-y-1 flex flex-col"
                 >
                   <div className="flex items-start justify-between mb-4">
-                    <div className="text-3xl">{cert.icon}</div>
+                    <div className="text-3xl">{cert.category.icon}</div>
                     <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
                       {cert.category.name}
                     </span>
