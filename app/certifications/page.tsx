@@ -103,22 +103,21 @@ function CertificationsPageContent() {
         <div className="max-w-7xl mx-auto">
           <div className="text-center mb-8">
             <h1
-              className="text-3xl lg:text-5xl font-bold mb-4 leading-relaxed"
+              className="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight mb-6"
               style={{
                 fontFamily: "Work Sans, system-ui, sans-serif",
                 fontWeight: 700,
-                background: "linear-gradient(135deg, #1e40af 0%, #111827 100%)",
-                WebkitBackgroundClip: "text",
-                WebkitTextFillColor: "transparent",
-                backgroundClip: "text",
               }}
             >
               {currentFilter
                 ? `${
                     categories.find((c) => c.slug === currentFilter)?.name ||
                     "Filtered"
-                  } Certifications`
-                : "All Certifications"}
+                  } `
+                : "All "}
+              <span className="bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent">
+                Certifications
+              </span>
             </h1>
             <p className="text-lg lg:text-xl text-slate-600 max-w-3xl mx-auto">
               {currentSearch
