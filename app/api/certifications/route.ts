@@ -3,20 +3,6 @@ import { prisma } from "@/lib/prisma";
 
 const ITEMS_PER_PAGE = 12;
 
-// Connection retry function (same as working homepage APIs)
-async function connectWithRetry(retries = 3) {
-  for (let i = 0; i < retries; i++) {
-    try {
-      await prisma.$connect();
-      return;
-    } catch (error) {
-      console.error(`Database connection attempt ${i + 1} failed:`, error);
-      if (i === retries - 1) throw error;
-      await new Promise((resolve) => setTimeout(resolve, 1000 * (i + 1)));
-    }
-  }
-}
-
 // Fallback data for when database fails
 const fallbackData = {
   certifications: [
@@ -69,11 +55,6 @@ const fallbackData = {
 
 export async function GET(request: NextRequest) {
   try {
-    await connectWithRetry();
-
-    // Small delay to ensure connection is ready
-    await new Promise((resolve) => setTimeout(resolve, 100));
-
     const { searchParams } = new URL(request.url);
     const search = searchParams.get("search") || "";
     const filter = searchParams.get("filter") || "";
@@ -155,11 +136,9 @@ export async function GET(request: NextRequest) {
       currentPage: page,
     };
 
-    await prisma.$disconnect();
     return NextResponse.json(result);
   } catch (error) {
     console.error("Error in certifications API:", error);
-    await prisma.$disconnect();
 
     // Return fallback data on error
     return NextResponse.json(fallbackData, { status: 200 });
