@@ -97,7 +97,7 @@ export default function HomePage() {
                       type="text"
                       name="search"
                       placeholder="Search certifications..."
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder-slate-500"
+                      className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:bg-white transition-all text-slate-900 placeholder-slate-500"
                     />
                   </div>
                   <button
