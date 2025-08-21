@@ -20,7 +20,7 @@ if (process.env.NODE_ENV !== "production") {
 }
 
 // Connection retry function for serverless environments
-export async function connectWithRetry(retries = 5) {
+export async function connectWithRetry(retries = 3) {
   for (let i = 0; i < retries; i++) {
     try {
       await prisma.$connect();
