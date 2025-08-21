@@ -27,7 +27,7 @@ interface SearchParams {
 const ITEMS_PER_PAGE = 12;
 
 // Main component
-export default function CertificationsPage() {
+function CertificationsPageContent() {
   const searchParams = useSearchParams();
   const [data, setData] = useState<any>({
     certifications: [],
@@ -669,5 +669,25 @@ export default function CertificationsPage() {
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function CertificationsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div
+          className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center"
+          style={{ fontFamily: "Work Sans, system-ui, sans-serif" }}
+        >
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+            <p className="text-slate-600">Loading certifications...</p>
+          </div>
+        </div>
+      }
+    >
+      <CertificationsPageContent />
+    </Suspense>
   );
 }
