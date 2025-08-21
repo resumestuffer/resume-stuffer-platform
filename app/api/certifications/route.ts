@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { prisma, connectWithRetry } from "@/lib/prisma";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -55,6 +55,9 @@ const fallbackData = {
 
 export async function GET(request: NextRequest) {
   try {
+    // Use retry logic for connection
+    await connectWithRetry();
+
     const { searchParams } = new URL(request.url);
     const search = searchParams.get("search") || "";
     const filter = searchParams.get("filter") || "";
@@ -136,9 +139,12 @@ export async function GET(request: NextRequest) {
       currentPage: page,
     };
 
+    // Explicit disconnect
+    await prisma.$disconnect();
     return NextResponse.json(result);
   } catch (error) {
     console.error("Error in certifications API:", error);
+    await prisma.$disconnect();
 
     // Return fallback data on error
     return NextResponse.json(fallbackData, { status: 200 });
