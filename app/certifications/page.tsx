@@ -1,5 +1,7 @@
-import { Suspense } from "react";
-import { prisma } from "@/lib/prisma";
+"use client";
+
+import { Suspense, useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import {
   Search,
@@ -22,141 +24,71 @@ interface SearchParams {
   popular?: string;
 }
 
-interface CertificationsPageProps {
-  searchParams: SearchParams;
-}
-
 const ITEMS_PER_PAGE = 12;
 
-// Data fetching function
-async function getCertifications(searchParams: SearchParams) {
-  try {
-    const {
-      search,
-      filter,
-      sort = "salaryIncrease",
-      page = "1",
-      popular,
-    } = searchParams;
-    const currentPage = parseInt(page);
-
-    // Build where clause
-    const where: any = {};
-
-    // Handle search
-    if (search) {
-      where.OR = [
-        { title: { contains: search, mode: "insensitive" } },
-        { description: { contains: search, mode: "insensitive" } },
-        { provider: { name: { contains: search, mode: "insensitive" } } },
-      ];
-    }
-
-    // Handle category filter
-    if (filter) {
-      where.category = {
-        slug: filter,
-      };
-    }
-
-    // Build orderBy clause
-    let orderBy: any = { salaryIncrease: "desc" };
-    if (sort === "title") orderBy = { title: "asc" };
-    // Handle "Free Only" filter
-    if (sort === "freeOnly") {
-      where.price = 0;
-      orderBy = { title: "asc" };
-    }
-    if (sort === "studyTime") orderBy = { studyTimeHours: "asc" };
-    if (sort === "popular") {
-      // Enhanced popular logic: mix of free, featured, high-demand, and commonly searched
-      orderBy = [
-        { isFeatured: "desc" }, // Featured certifications first
-        { price: "asc" }, // Free certifications next
-        { demandLevel: "desc" }, // High demand level
-        { salaryIncrease: "desc" }, // High salary impact
-      ];
-    }
-
-    // Get total count for pagination
-    const totalCount = await prisma.certification.count({ where });
-
-    const certifications = await prisma.certification.findMany({
-      where, // ← Use the where clause you built above
-      select: {
-        id: true,
-        title: true,
-        slug: true,
-        description: true,
-        price: true,
-        salaryIncrease: true,
-        studyTimeHours: true,
-        hasGuide: true,
-        enrollUrl: true,
-        icon: true,
-        category: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
-        },
-        provider: {
-          select: {
-            id: true,
-            name: true,
-            slug: true,
-          },
-        },
-      },
-      take: ITEMS_PER_PAGE, // ← Use the constant (12 items per page)
-      skip: (currentPage - 1) * ITEMS_PER_PAGE, // ← Add pagination skip
-      orderBy, // ← Use the orderBy you built above
-    });
-
-    return {
-      certifications,
-      totalCount,
-      totalPages: Math.ceil(totalCount / ITEMS_PER_PAGE),
-      currentPage,
-    };
-  } catch (error) {
-    console.error("Error fetching certifications:", error);
-    return {
-      certifications: [],
-      totalCount: 0,
-      totalPages: 0,
-      currentPage: 1,
-    };
-  }
-}
-
-async function getCategories() {
-  try {
-    const categories = await prisma.category.findMany({
-      orderBy: { name: "asc" },
-    });
-    return categories;
-  } catch (error) {
-    console.error("Error fetching categories:", error);
-    return [];
-  }
-}
-
 // Main component
-export default async function CertificationsPage({
-  searchParams,
-}: CertificationsPageProps) {
-  // Await searchParams in Next.js 15
-  const params = await searchParams;
+export default function CertificationsPage() {
+  const searchParams = useSearchParams();
+  const [data, setData] = useState<any>({
+    certifications: [],
+    totalCount: 0,
+    totalPages: 0,
+    currentPage: 1,
+  });
+  const [categories, setCategories] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const { certifications, totalCount, totalPages, currentPage } =
-    await getCertifications(params);
-  const categories = await getCategories();
+  // Get current search params
+  const currentSearch = searchParams.get("search") || "";
+  const currentFilter = searchParams.get("filter") || "";
+  const currentSort = searchParams.get("sort") || "salaryIncrease";
+  const currentPage = parseInt(searchParams.get("page") || "1");
 
-  const currentSearch = params.search || "";
-  const currentFilter = params.filter || "";
-  const currentSort = params.sort || "salaryIncrease";
+  // Fetch data
+  useEffect(() => {
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const params = new URLSearchParams();
+        if (currentSearch) params.set("search", currentSearch);
+        if (currentFilter) params.set("filter", currentFilter);
+        if (currentSort) params.set("sort", currentSort);
+        params.set("page", currentPage.toString());
+
+        const [certificationsResponse, categoriesResponse] = await Promise.all([
+          fetch(`/api/certifications?${params.toString()}`),
+          fetch("/api/categories"),
+        ]);
+
+        const certificationsData = await certificationsResponse.json();
+        const categoriesData = await categoriesResponse.json();
+
+        setData(certificationsData);
+        setCategories(categoriesData);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchData();
+  }, [currentSearch, currentFilter, currentSort, currentPage]);
+
+  const { certifications, totalCount, totalPages } = data;
+
+  if (loading) {
+    return (
+      <div
+        className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 flex items-center justify-center"
+        style={{ fontFamily: "Work Sans, system-ui, sans-serif" }}
+      >
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-slate-600">Loading certifications...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -368,14 +300,14 @@ export default async function CertificationsPage({
           <Suspense fallback={<div>Loading certifications...</div>}>
             {certifications.length > 0 ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-                {certifications.map((cert) => (
+                {certifications.map((cert: any) => (
                   <div
                     key={cert.id}
                     className="bg-white rounded-xl p-6 shadow-lg border border-slate-200 hover:shadow-xl transition-all hover:transform hover:-translate-y-1 flex flex-col"
                   >
                     {/* Header */}
                     <div className="flex items-start justify-between mb-4">
-                      <div className="text-3xl">{cert.icon}</div>
+                      <div className="text-3xl">{cert.category.icon}</div>
                       <span className="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
                         {cert.category.name}
                       </span>
