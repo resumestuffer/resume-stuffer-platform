@@ -28,7 +28,7 @@ export default function RootLayout({
         {/* @ts-ignore */}
         <meta
           name="impact-site-verification"
-          value="bd651795-31e0-4bed-9eb1-4ab24718a7ce"
+          value="0c695337-8d9f-4f2f-9b59-4ea6344cda48"
         />
       </head>
       <body
