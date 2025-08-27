@@ -17,6 +17,20 @@ export const metadata: Metadata = {
     "Resume Stuffer - Strategic Certification Guidance for Career Advancement",
   description:
     "Discover high-impact certifications with proven ROI. Expert analysis of 63+ certifications from AWS, Google, Microsoft, and more. Make informed career investments.",
+  keywords:
+    "certifications, professional development, career advancement, AWS, Google, Microsoft, certification ROI, salary increase",
+  openGraph: {
+    title: "Resume Stuffer - Strategic Certification Guidance",
+    description: "Expert analysis of 63+ certifications with proven ROI data",
+    url: "https://resumestuffer.com",
+    siteName: "Resume Stuffer",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Resume Stuffer - Strategic Certification Guidance",
+    description: "Expert analysis of 63+ certifications with proven ROI data",
+  },
 };
 
 export default function RootLayout({
@@ -39,10 +53,12 @@ export default function RootLayout({
         ></script>
         <script
           dangerouslySetInnerHTML={{
-            __html: `indow.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-JMTGWF8G9P');`,
+            __html: `
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-JMTGWF8G9P');
+            `,
           }}
         />
       </head>
