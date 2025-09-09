@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-
+import { Geist, Geist_Mono } from "next/font/google";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -44,7 +43,7 @@ export default function RootLayout({
         {/* @ts-ignore */}
         <meta
           name="impact-site-verification"
-          value="0c695337-8d9f-4f2f-9b59-4ea6344cda48"
+          content="0c695337-8d9f-4f2f-9b59-4ea6344cda48"
         />
         {/* Google Analytics */}
         <script

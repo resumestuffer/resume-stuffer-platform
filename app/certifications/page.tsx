@@ -14,6 +14,7 @@ import {
   TrendingUp,
 } from "lucide-react";
 import MobileHeader from "../MobileHeader";
+import Footer from "../components/Footer";
 
 // Search and filter props interface
 interface SearchParams {
@@ -527,146 +528,7 @@ function CertificationsPageContent() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="bg-slate-800 text-white px-4 sm:px-6 lg:px-8 py-12">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div>
-              <div className="flex items-center space-x-2 mb-4">
-                <div className="text-2xl">📄</div>
-                <span className="text-xl font-bold">Resume Stuffer</span>
-              </div>
-              <p className="text-slate-300">
-                Empowering professionals to advance their careers through
-                strategic certifications.
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-4 text-blue-400">Categories</h3>
-              <ul className="space-y-2 text-slate-300">
-                <li>
-                  <Link
-                    href="/certifications?filter=technology"
-                    className="hover:text-blue-400 transition-colors"
-                  >
-                    Technology
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/certifications?filter=digital-marketing"
-                    className="hover:text-blue-400 transition-colors"
-                  >
-                    Digital Marketing
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/certifications?filter=data-analytics"
-                    className="hover:text-blue-400 transition-colors"
-                  >
-                    Data & Analytics
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/certifications?filter=business-productivity"
-                    className="hover:text-blue-400 transition-colors"
-                  >
-                    Business
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/certifications?filter=design-creative"
-                    className="hover:text-blue-400 transition-colors"
-                  >
-                    Design & Creative
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-4 text-blue-400">Resources</h3>
-              <ul className="space-y-2 text-slate-300">
-                <li>
-                  <Link
-                    href="/certifications"
-                    className="hover:text-blue-400 transition-colors"
-                  >
-                    All Certifications
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/contact"
-                    className="hover:text-blue-400 transition-colors"
-                  >
-                    Get Support
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/#earning-calculator"
-                    className="hover:text-blue-400 transition-colors"
-                  >
-                    Earning Calculator
-                  </Link>
-                </li>
-              </ul>
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-4 text-blue-400">Company</h3>
-              <ul className="space-y-2 text-slate-300">
-                <li>
-                  <Link
-                    href="/about"
-                    className="hover:text-blue-400 transition-colors"
-                  >
-                    About Us
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/contact"
-                    className="hover:text-blue-400 transition-colors"
-                  >
-                    Contact
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/privacy"
-                    className="hover:text-blue-400 transition-colors"
-                  >
-                    Privacy Policy
-                  </Link>
-                </li>
-                <li>
-                  <Link
-                    href="/terms"
-                    className="hover:text-blue-400 transition-colors"
-                  >
-                    Terms of Service
-                  </Link>
-                </li>
-              </ul>
-            </div>
-          </div>
-
-          <div className="border-t border-slate-700 mt-8 pt-8 text-center">
-            <p className="text-slate-400">
-              &copy; 2025 Resume Stuffer. All rights reserved.
-              <span className="text-sm ml-2">
-                Affiliate links may earn us a commission.
-              </span>
-            </p>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 }

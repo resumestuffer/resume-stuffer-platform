@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,118 +8,89 @@ datasource db {
 }
 
 model Category {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  slug        String   @unique
-  description String?
-  color       String   @default("#3B82F6")
-  icon        String   @default("📚")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
+  id             String          @id @default(cuid())
+  name           String          @unique
+  slug           String          @unique
+  description    String?
+  color          String          @default("#3B82F6")
+  icon           String          @default("📚")
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
   certifications Certification[]
 
   @@map("categories")
 }
 
 model Provider {
-  id          String   @id @default(cuid())
-  name        String   @unique
-  slug        String   @unique
-  website     String?
-  logo        String?
-  description String?
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
+  id             String          @id @default(cuid())
+  name           String          @unique
+  slug           String          @unique
+  website        String?
+  logo           String?
+  description    String?
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
   certifications Certification[]
 
   @@map("providers")
 }
 
 model Certification {
-  id               String   @id @default(cuid())
-  title            String
-  slug             String   @unique
-  description      String
-  shortDescription String?
-  icon             String?
-  targetAudience   String[] @default([]) // ["high-school", "college", "career-change"] 
-  careerStage      String   @default("entry") // "entry", "mid", "senior"
-  industryFocus    String[] @default([]) // ["tech", "healthcare", "finance"]
-  timeToComplete   Int      @default(0) // days
-  difficultyLevel  Int      @default(3) // 1-10 scale
-  employerDemand   String   @default("Medium") // "Low", "Medium", "High", "Critical"
-
-  // Partnership and authenticity
-  isSponsored     Boolean @default(false)
-  partnerDiscount String? // "10% off with code RESUME10"
-
-  // Pricing
-  price              Int     @default(0) // Price in cents
-  originalPrice      Int? // Original price if on sale
-  isSubscription     Boolean @default(false)
-  subscriptionPeriod String? // "monthly", "yearly"
-
-  // Time investment
-  studyTimeHours Int @default(0)
-  studyTimeWeeks Int @default(0)
-
-  // Career impact
-  salaryIncrease  Int    @default(0) // Annual salary increase in dollars
-  demandLevel     String @default("Medium") // "Low", "Medium", "High", "Very High"
-  experienceLevel String @default("Beginner") // "Beginner", "Intermediate", "Advanced"
-
-  // Content
-  learningPath   String?
-  keySkills      String[] @default([])
-  prerequisites  String[] @default([])
-  careerOutcomes String[] @default([])
-
-  // URLs and links
-  enrollUrl   String?
-  officialUrl String?
-  guideUrl    String? // Link to our detailed guide
-
-  // SEO and metadata
-  metaTitle       String?
-  metaDescription String?
-  keywords        String[] @default([])
-
-  // Status and featured
-  isActive   Boolean @default(true)
-  isFeatured Boolean @default(false)
-  isPremium  Boolean @default(false)
-  hasGuide   Boolean @default(false)
-
-  // ===== ENHANCED FIELDS (PROPERLY INTEGRATED) =====
-  // Exam Details
-  examCode      String? // e.g., "SAA-C03", "CLF-C01"
-  validityYears Int? // e.g., 3 (years before renewal needed)
-  examFormat    String? // e.g., "Multiple choice", "Lab-based", "Mixed"
-  examDuration  Int? // Duration in minutes
-  passingScore  String? // e.g., "720/1000", "70%"
-  retakePolicy  String? // e.g., "14 days", "Immediate"
-
-  // Study statistics for right rail
-  passRate     Int? // Pass rate percentage
-  averageScore String? // Average score
-  retakeRate   Int? // Percentage who retake
-
-  // Prerequisites and relationships for internal linking
-  prerequisiteCerts  String[] // Array of certification slugs that are prerequisites
-  complementaryCerts String[] // Array of certification slugs that complement this one
-  nextCerts          String[] @default([]) // Array of certification slugs that follow this one
-
-  // Relationships
-  categoryId String
-  category   Category @relation(fields: [categoryId], references: [id])
-  providerId String
-  provider   Provider @relation(fields: [providerId], references: [id])
-
-  // Timestamps
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                 String   @id @default(cuid())
+  title              String
+  slug               String   @unique
+  description        String
+  shortDescription   String?
+  icon               String?
+  targetAudience     String[] @default([])
+  careerStage        String   @default("entry")
+  industryFocus      String[] @default([])
+  timeToComplete     Int      @default(0)
+  difficultyLevel    Int      @default(3)
+  employerDemand     String   @default("Medium")
+  isSponsored        Boolean  @default(false)
+  partnerDiscount    String?
+  price              Int      @default(0)
+  originalPrice      Int?
+  isSubscription     Boolean  @default(false)
+  subscriptionPeriod String?
+  studyTimeHours     Int      @default(0)
+  studyTimeWeeks     Int      @default(0)
+  salaryIncrease     Int      @default(0)
+  demandLevel        String   @default("Medium")
+  experienceLevel    String   @default("Beginner")
+  learningPath       String?
+  keySkills          String[] @default([])
+  prerequisites      String[] @default([])
+  careerOutcomes     String[] @default([])
+  enrollUrl          String?
+  officialUrl        String?
+  guideUrl           String?
+  metaTitle          String?
+  metaDescription    String?
+  keywords           String[] @default([])
+  isActive           Boolean  @default(true)
+  isFeatured         Boolean  @default(false)
+  isPremium          Boolean  @default(false)
+  hasGuide           Boolean  @default(false)
+  examCode           String?
+  validityYears      Int?
+  examFormat         String?
+  examDuration       Int?
+  passingScore       String?
+  retakePolicy       String?
+  passRate           Int?
+  averageScore       String?
+  retakeRate         Int?
+  prerequisiteCerts  String[]
+  complementaryCerts String[]
+  nextCerts          String[] @default([])
+  categoryId         String
+  providerId         String
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+  category           Category @relation(fields: [categoryId], references: [id])
+  provider           Provider @relation(fields: [providerId], references: [id])
 
   @@index([categoryId])
   @@index([providerId])
@@ -133,27 +101,19 @@ model Certification {
 }
 
 model Guide {
-  id      String  @id @default(cuid())
-  title   String
-  slug    String  @unique
-  content String
-  excerpt String?
-
-  // SEO
+  id              String    @id @default(cuid())
+  title           String
+  slug            String    @unique
+  content         String
+  excerpt         String?
   metaTitle       String?
   metaDescription String?
-  keywords        String[] @default([])
-
-  // Status
-  isPublished Boolean   @default(false)
-  publishedAt DateTime?
-
-  // Relationships
-  certificationId String? @unique
-
-  // Timestamps
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  keywords        String[]  @default([])
+  isPublished     Boolean   @default(false)
+  publishedAt     DateTime?
+  certificationId String?   @unique
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
 
   @@map("guides")
 }
@@ -165,7 +125,7 @@ model LearningPath {
   targetAudience   String
   estimatedIncome  Int
   timeToComplete   Int
-  certificationIds String[] // References to certification IDs
+  certificationIds String[]
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 

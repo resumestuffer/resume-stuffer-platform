@@ -744,6 +744,80 @@ async function main() {
     }),
 
     prisma.certification.upsert({
+      where: { slug: "aws-solutions-architect-associate" },
+      update: {},
+      create: {
+        title: "AWS Solutions Architect Associate",
+        slug: "aws-solutions-architect-associate",
+        description:
+          "Validates the ability to design and deploy scalable, highly available, and fault-tolerant systems on AWS. Focuses on designing cost and performance optimized solutions.",
+        shortDescription: "Design and deploy AWS cloud solutions",
+        price: 15000, // $150 in cents
+        studyTimeHours: 120,
+        studyTimeWeeks: 8,
+        salaryIncrease: 23000,
+        demandLevel: "Very High",
+        experienceLevel: "Associate",
+        // === ENHANCED FIELDS ===
+        examCode: "SAA-C03",
+        validityYears: 3,
+        examFormat: "Multiple choice and multiple response",
+        passRate: 73,
+        averageScore: "720",
+        retakeRate: 25,
+        keySkills: [
+          "AWS Architecture Design",
+          "Cost Optimization",
+          "Security Best Practices",
+          "Performance Optimization",
+          "Reliability Engineering",
+          "Well-Architected Framework",
+          "Storage Solutions",
+          "Compute Services",
+          "Networking",
+          "Database Design",
+        ],
+        prerequisites: [
+          "1+ years hands-on AWS experience",
+          "Basic understanding of distributed systems",
+          "Familiarity with networking concepts",
+        ],
+        careerOutcomes: [
+          "Solutions Architect",
+          "Cloud Engineer",
+          "DevOps Engineer",
+          "Cloud Developer",
+          "System Administrator",
+          "Technical Consultant",
+        ],
+        learningPath:
+          "aws-cloud-practitioner,aws-developer-associate,aws-sysops-administrator-associate",
+        targetAudience: [
+          "Cloud engineers",
+          "solutions architects",
+          "developers with AWS experience",
+          "system administrators",
+        ],
+        industryFocus: [
+          "Technology",
+          "Financial Services",
+          "Healthcare",
+          "Retail",
+          "Manufacturing",
+          "Startups",
+        ],
+        enrollUrl:
+          "https://aws.amazon.com/certification/certified-solutions-architect-associate/",
+        guideUrl: "/certifications/aws/aws-solutions-architect-associate",
+        isFeatured: true,
+        hasGuide: true,
+        isActive: true,
+        categoryId: techCategory.id,
+        providerId: awsProvider.id,
+      },
+    }),
+
+    prisma.certification.upsert({
       where: { slug: "aws-developer-associate" },
       update: {},
       create: {
