@@ -104,7 +104,7 @@ export default function Footer() {
                   href="/certifications?filter=business-productivity"
                   className="hover:text-blue-400 transition-colors"
                 >
-                  Business
+                  Business & Productivity
                 </Link>
               </li>
               <li>
@@ -113,6 +113,14 @@ export default function Footer() {
                   className="hover:text-blue-400 transition-colors"
                 >
                   Design & Creative
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/certifications?filter=cybersecurity"
+                  className="hover:text-blue-400 transition-colors"
+                >
+                  Cybersecurity
                 </Link>
               </li>
             </ul>
