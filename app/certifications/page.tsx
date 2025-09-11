@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useState, useEffect } from "react";
+import { Suspense, useState, useEffect, useCallback, useRef } from "react";
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import Link from "next/link";
 import {
@@ -142,6 +142,9 @@ function EnhancedCertificationsPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [isFiltering, setIsFiltering] = useState(false);
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const urlUpdateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Filter state
   const [filters, setFilters] = useState<FilterState>({
@@ -169,55 +172,103 @@ function EnhancedCertificationsPage() {
     setSearchTerm(newFilters.search);
   }, [searchParams]);
 
-  // Update URL when filters change
-  const updateURL = (newFilters: FilterState) => {
-    const params = new URLSearchParams();
+  // Update URL when filters change (debounced)
+  const updateURL = useCallback((newFilters: FilterState) => {
+    if (urlUpdateTimeoutRef.current) {
+      clearTimeout(urlUpdateTimeoutRef.current);
+    }
     
-    if (newFilters.search) params.set("search", newFilters.search);
-    if (newFilters.providers.length > 0) params.set("providers", newFilters.providers.join(","));
-    if (newFilters.priceRanges.length > 0) params.set("priceRanges", newFilters.priceRanges.join(","));
-    if (newFilters.experienceLevels.length > 0) params.set("experienceLevels", newFilters.experienceLevels.join(","));
-    if (newFilters.studyTimeRanges.length > 0) params.set("studyTimeRanges", newFilters.studyTimeRanges.join(","));
-    if (newFilters.sort !== "salaryIncrease") params.set("sort", newFilters.sort);
-    if (newFilters.page > 1) params.set("page", newFilters.page.toString());
+    urlUpdateTimeoutRef.current = setTimeout(() => {
+      const params = new URLSearchParams();
+      
+      if (newFilters.search) params.set("search", newFilters.search);
+      if (newFilters.providers.length > 0) params.set("providers", newFilters.providers.join(","));
+      if (newFilters.priceRanges.length > 0) params.set("priceRanges", newFilters.priceRanges.join(","));
+      if (newFilters.experienceLevels.length > 0) params.set("experienceLevels", newFilters.experienceLevels.join(","));
+      if (newFilters.studyTimeRanges.length > 0) params.set("studyTimeRanges", newFilters.studyTimeRanges.join(","));
+      if (newFilters.sort !== "salaryIncrease") params.set("sort", newFilters.sort);
+      if (newFilters.page > 1) params.set("page", newFilters.page.toString());
 
-    const newURL = params.toString() ? `${pathname}?${params.toString()}` : pathname;
-    router.push(newURL);
-  };
+      const newURL = params.toString() ? `${pathname}?${params.toString()}` : pathname;
+      router.replace(newURL, { scroll: false });
+    }, 300);
+  }, [pathname, router]);
 
-  // Fetch data
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
+  // Debounced data fetching
+  const fetchData = useCallback(async (currentFilters: FilterState, immediate = false) => {
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
+
+    const doFetch = async () => {
+      setIsFiltering(true);
       try {
         // Build API params
         const apiParams = new URLSearchParams();
-        if (filters.search) apiParams.set("search", filters.search);
-        if (filters.providers.length > 0) apiParams.set("providers", filters.providers.join(","));
-        if (filters.priceRanges.length > 0) apiParams.set("priceRanges", filters.priceRanges.join(","));
-        if (filters.experienceLevels.length > 0) apiParams.set("experienceLevels", filters.experienceLevels.join(","));
-        if (filters.studyTimeRanges.length > 0) apiParams.set("studyTimeRanges", filters.studyTimeRanges.join(","));
-        apiParams.set("sort", filters.sort);
-        apiParams.set("page", filters.page.toString());
+        if (currentFilters.search) apiParams.set("search", currentFilters.search);
+        if (currentFilters.providers.length > 0) apiParams.set("providers", currentFilters.providers.join(","));
+        if (currentFilters.priceRanges.length > 0) apiParams.set("priceRanges", currentFilters.priceRanges.join(","));
+        if (currentFilters.experienceLevels.length > 0) apiParams.set("experienceLevels", currentFilters.experienceLevels.join(","));
+        if (currentFilters.studyTimeRanges.length > 0) apiParams.set("studyTimeRanges", currentFilters.studyTimeRanges.join(","));
+        apiParams.set("sort", currentFilters.sort);
+        apiParams.set("page", currentFilters.page.toString());
 
-        const [certificationsResponse, providersResponse] = await Promise.all([
-          fetch(`/api/certifications-enhanced?${apiParams.toString()}`),
-          fetch("/api/providers"),
-        ]);
-
+        const certificationsResponse = await fetch(`/api/certifications-enhanced?${apiParams.toString()}`);
         const certificationsData = await certificationsResponse.json();
-        const providersData = await providersResponse.json();
 
         setData(certificationsData);
-        setProviders(providersData);
       } catch (error) {
         console.error("Error fetching data:", error);
+      } finally {
+        setIsFiltering(false);
+      }
+    };
+
+    if (immediate) {
+      await doFetch();
+    } else {
+      debounceTimeoutRef.current = setTimeout(doFetch, 150);
+    }
+  }, []);
+
+  // Initial data load
+  useEffect(() => {
+    const loadInitialData = async () => {
+      setLoading(true);
+      try {
+        const providersResponse = await fetch("/api/providers");
+        const providersData = await providersResponse.json();
+        setProviders(providersData);
+        
+        await fetchData(filters, true);
+      } catch (error) {
+        console.error("Error loading initial data:", error);
       } finally {
         setLoading(false);
       }
     };
-    fetchData();
-  }, [filters]);
+    
+    loadInitialData();
+  }, []);
+
+  // Fetch data when filters change
+  useEffect(() => {
+    if (!loading) {
+      fetchData(filters);
+    }
+  }, [filters, loading, fetchData]);
+
+  // Cleanup timeouts on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+      if (urlUpdateTimeoutRef.current) {
+        clearTimeout(urlUpdateTimeoutRef.current);
+      }
+    };
+  }, []);
 
   // Filter handlers
   const handleSearch = (e: React.FormEvent) => {
@@ -487,7 +538,14 @@ function EnhancedCertificationsPage() {
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-lg font-bold text-slate-900">Filters</h2>
                   <span className="text-sm text-slate-500">
-                    Showing {totalCount} results
+                    {isFiltering ? (
+                      <span className="inline-flex items-center gap-1">
+                        <div className="animate-spin w-3 h-3 border border-blue-500 border-t-transparent rounded-full"></div>
+                        Filtering...
+                      </span>
+                    ) : (
+                      `${totalCount} results`
+                    )}
                   </span>
                 </div>
 
@@ -584,8 +642,12 @@ function EnhancedCertificationsPage() {
 
               {/* Certifications Grid */}
               <Suspense fallback={<div>Loading certifications...</div>}>
-                {certifications.length > 0 ? (
-                  <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+                <div className="relative">
+                  {isFiltering && (
+                    <div className="absolute inset-0 bg-white/50 z-10 rounded-lg"></div>
+                  )}
+                  {certifications.length > 0 ? (
+                    <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
                     {certifications.map((cert: any) => (
                       <div
                         key={cert.id}
@@ -673,7 +735,8 @@ function EnhancedCertificationsPage() {
                       Clear All Filters
                     </button>
                   </div>
-                )}
+                  )}
+                </div>
               </Suspense>
 
               {/* Pagination */}
@@ -743,7 +806,14 @@ function EnhancedCertificationsPage() {
                 {/* Results Count */}
                 <div className="text-center p-3 bg-blue-50 rounded-lg">
                   <span className="text-sm font-medium text-blue-900">
-                    Showing {totalCount} results
+                    {isFiltering ? (
+                      <span className="inline-flex items-center gap-2">
+                        <div className="animate-spin w-3 h-3 border border-blue-600 border-t-transparent rounded-full"></div>
+                        Filtering...
+                      </span>
+                    ) : (
+                      `Showing ${totalCount} results`
+                    )}
                   </span>
                 </div>
 
