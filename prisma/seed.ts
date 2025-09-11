@@ -4747,10 +4747,25 @@ async function main() {
           "DevOps Engineer",
           "Site Reliability Engineer",
         ],
+        targetAudience: [
+          "Systems administrators",
+          "DevOps engineers",
+          "cloud operations professionals",
+        ],
+        industryFocus: [
+          "Technology",
+          "Healthcare", 
+          "Finance",
+          "E-commerce",
+          "Government",
+        ],
+        learningPath: "aws-devops-professional,aws-security-specialty",
+        prerequisites: ["aws-cloud-practitioner"],
         prerequisiteCerts: ["aws-cloud-practitioner"],
         complementaryCerts: ["aws-solutions-architect-associate", "aws-developer-associate"],
         nextCerts: ["aws-devops-professional"],
         enrollUrl: "https://aws.amazon.com/certification/certified-sysops-admin-associate/",
+        hasGuide: true,
         isActive: true,
         isFeatured: true,
         categoryId: techCategory.id,
@@ -5760,13 +5775,13 @@ async function main() {
     }),
   ]);
 
-  console.log("✅ All 118 certifications created");
+  console.log("✅ All certifications created");
   console.log(`🎉 Database seeded with:`);
   console.log(`📊 ${categories.length} categories`);
   console.log(`🏢 ${providers.length} providers`);
-  console.log(`🎓 118 total certifications:`);
+  console.log(`🎓 89 total certifications:`);
   console.log(`   • 63 original enhanced certifications`);
-  console.log(`   • 55 new high-value certifications added`);
+  console.log(`   • 26 new high-value certifications added`);
   console.log(`   • 100% enhanced certifications with full field data`);
   console.log(`🚀 Major expansion covering:`);
   console.log(`   • Complete AWS certification tracks`);
