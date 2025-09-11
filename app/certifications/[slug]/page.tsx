@@ -1006,15 +1006,15 @@ export default async function CertificationPage({
                 )}
               </div>
 
-              {/* Complementary Certifications */}
-              <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
-                <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-                  <Target className="w-5 h-5 text-blue-600" />
-                  Complementary Certifications
-                </h3>
+              {/* Complementary Certifications - Only show if data exists */}
+              {certification.complementaryCerts &&
+                certification.complementaryCerts.length > 0 && (
+                <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
+                  <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+                    <Target className="w-5 h-5 text-blue-600" />
+                    Complementary Certifications
+                  </h3>
 
-                {certification.complementaryCerts &&
-                certification.complementaryCerts.length > 0 ? (
                   <div className="space-y-2">
                     {certification.complementaryCerts.map((certSlug, index) => (
                       <Link
@@ -1028,34 +1028,9 @@ export default async function CertificationPage({
                       </Link>
                     ))}
                   </div>
-                ) : (
-                  <div className="bg-slate-50 p-4 rounded-lg text-center">
-                    <p className="text-xs text-slate-500">
-                      Complementary certifications coming soon
-                    </p>
-                    <p className="text-xs text-slate-400">
-                      (Cross-selling recommendations)
-                    </p>
-                  </div>
-                )}
-              </div>
-
-              {/* Enhanced Study Resources */}
-              <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
-                <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-                  <FileText className="w-5 h-5 text-blue-600" />
-                  Study Resources
-                </h3>
-
-                <div className="bg-slate-50 p-4 rounded-lg text-center">
-                  <p className="text-xs text-slate-500">
-                    Verified study resources coming soon
-                  </p>
-                  <p className="text-xs text-slate-400">
-                    (No broken or fake links policy)
-                  </p>
                 </div>
-              </div>
+              )}
+
 
               {/* Sticky Ad Container - Hidden for now */}
               <div
