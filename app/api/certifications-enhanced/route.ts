@@ -26,6 +26,7 @@ export async function GET(request: NextRequest) {
     
     // Extract parameters
     const search = searchParams.get("search") || "";
+    const categories = searchParams.get("categories")?.split(",").filter(Boolean) || [];
     const providers = searchParams.get("providers")?.split(",").filter(Boolean) || [];
     const priceRanges = searchParams.get("priceRanges")?.split(",").filter(Boolean) || [];
     const experienceLevels = searchParams.get("experienceLevels")?.split(",").filter(Boolean) || [];
@@ -47,6 +48,13 @@ export async function GET(request: NextRequest) {
         { targetAudience: { hasSome: [search] } },
         { industryFocus: { hasSome: [search] } }
       ];
+    }
+
+    // Category filter
+    if (categories.length > 0) {
+      where.category = {
+        slug: { in: categories }
+      };
     }
 
     // Provider filter
@@ -198,6 +206,7 @@ export async function GET(request: NextRequest) {
       currentPage: page,
       appliedFilters: {
         search,
+        categories,
         providers,
         priceRanges,
         experienceLevels,

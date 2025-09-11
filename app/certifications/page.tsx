@@ -22,6 +22,7 @@ import Footer from "../components/Footer";
 // Filter interfaces
 interface FilterState {
   search: string;
+  categories: string[];
   providers: string[];
   priceRanges: string[];
   experienceLevels: string[];
@@ -34,6 +35,15 @@ interface Provider {
   id: string;
   name: string;
   slug: string;
+  _count: { certifications: number };
+}
+
+interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  icon: string;
+  color: string;
   _count: { certifications: number };
 }
 
@@ -139,6 +149,7 @@ function EnhancedCertificationsPage() {
     currentPage: 1,
   });
   const [providers, setProviders] = useState<Provider[]>([]);
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
@@ -149,6 +160,7 @@ function EnhancedCertificationsPage() {
   // Filter state
   const [filters, setFilters] = useState<FilterState>({
     search: "",
+    categories: [],
     providers: [],
     priceRanges: [],
     experienceLevels: [],
@@ -161,6 +173,7 @@ function EnhancedCertificationsPage() {
   useEffect(() => {
     const newFilters: FilterState = {
       search: searchParams.get("search") || "",
+      categories: searchParams.get("categories")?.split(",").filter(Boolean) || [],
       providers: searchParams.get("providers")?.split(",").filter(Boolean) || [],
       priceRanges: searchParams.get("priceRanges")?.split(",").filter(Boolean) || [],
       experienceLevels: searchParams.get("experienceLevels")?.split(",").filter(Boolean) || [],
@@ -182,6 +195,7 @@ function EnhancedCertificationsPage() {
       const params = new URLSearchParams();
       
       if (newFilters.search) params.set("search", newFilters.search);
+      if (newFilters.categories.length > 0) params.set("categories", newFilters.categories.join(","));
       if (newFilters.providers.length > 0) params.set("providers", newFilters.providers.join(","));
       if (newFilters.priceRanges.length > 0) params.set("priceRanges", newFilters.priceRanges.join(","));
       if (newFilters.experienceLevels.length > 0) params.set("experienceLevels", newFilters.experienceLevels.join(","));
@@ -206,6 +220,7 @@ function EnhancedCertificationsPage() {
         // Build API params
         const apiParams = new URLSearchParams();
         if (currentFilters.search) apiParams.set("search", currentFilters.search);
+        if (currentFilters.categories.length > 0) apiParams.set("categories", currentFilters.categories.join(","));
         if (currentFilters.providers.length > 0) apiParams.set("providers", currentFilters.providers.join(","));
         if (currentFilters.priceRanges.length > 0) apiParams.set("priceRanges", currentFilters.priceRanges.join(","));
         if (currentFilters.experienceLevels.length > 0) apiParams.set("experienceLevels", currentFilters.experienceLevels.join(","));
@@ -236,9 +251,14 @@ function EnhancedCertificationsPage() {
     const loadInitialData = async () => {
       setLoading(true);
       try {
-        const providersResponse = await fetch("/api/providers");
+        const [providersResponse, categoriesResponse] = await Promise.all([
+          fetch("/api/providers"),
+          fetch("/api/categories")
+        ]);
         const providersData = await providersResponse.json();
+        const categoriesData = await categoriesResponse.json();
         setProviders(providersData);
+        setCategories(categoriesData);
         
         await fetchData(filters, true);
       } catch (error) {
@@ -281,6 +301,16 @@ function EnhancedCertificationsPage() {
   const clearSearch = () => {
     setSearchTerm("");
     const newFilters = { ...filters, search: "", page: 1 };
+    setFilters(newFilters);
+    updateURL(newFilters);
+  };
+
+  const toggleCategory = (categorySlug: string) => {
+    const newCategories = filters.categories.includes(categorySlug)
+      ? filters.categories.filter(c => c !== categorySlug)
+      : [...filters.categories, categorySlug];
+    
+    const newFilters = { ...filters, categories: newCategories, page: 1 };
     setFilters(newFilters);
     updateURL(newFilters);
   };
@@ -335,6 +365,7 @@ function EnhancedCertificationsPage() {
     setSearchTerm("");
     const newFilters: FilterState = {
       search: "",
+      categories: [],
       providers: [],
       priceRanges: [],
       experienceLevels: [],
@@ -362,6 +393,17 @@ function EnhancedCertificationsPage() {
         }
       });
     }
+
+    filters.categories.forEach(category => {
+      const categoryData = categories.find(c => c.slug === category);
+      if (categoryData) {
+        chips.push({
+          id: `category-${category}`,
+          label: categoryData.name,
+          remove: () => toggleCategory(category)
+        });
+      }
+    });
 
     filters.providers.forEach(provider => {
       const providerData = providers.find(p => p.slug === provider);
@@ -462,13 +504,13 @@ function EnhancedCertificationsPage() {
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   placeholder="Search AWS, Google Cloud, Security, Data Analytics..."
-                  className="w-full pl-12 pr-24 py-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-slate-900 placeholder-slate-500 text-lg"
+                  className="w-full pl-12 pr-32 py-4 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-slate-900 placeholder-slate-500 text-lg"
                 />
                 {searchTerm && (
                   <button
                     type="button"
                     onClick={clearSearch}
-                    className="absolute right-20 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 text-sm font-medium"
+                    className="absolute right-24 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 text-sm font-medium"
                   >
                     clear
                   </button>
@@ -510,6 +552,28 @@ function EnhancedCertificationsPage() {
                 </div>
               </div>
             )}
+
+            {/* Sort Options as Filter Chips */}
+            <div className="pt-4">
+              <div className="flex items-center gap-2 mb-3">
+                <span className="text-sm font-medium text-slate-700">Sort by:</span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {SORT_OPTIONS.map((option) => (
+                  <button
+                    key={option.value}
+                    onClick={() => changeSort(option.value)}
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                      filters.sort === option.value
+                        ? "bg-blue-600 text-white"
+                        : "bg-slate-100 text-slate-700 hover:bg-blue-100 hover:text-blue-700"
+                    }`}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -549,39 +613,26 @@ function EnhancedCertificationsPage() {
                   </span>
                 </div>
 
-                {/* Providers */}
-                <FilterSection title="PROVIDERS" icon="🏢">
-                  {providers.slice(0, 6).map((provider) => (
+                {/* Industry/Categories - FIRST */}
+                <FilterSection title="INDUSTRY" icon="🎯">
+                  {categories.slice(0, 8).map((category) => (
                     <FilterCheckbox
-                      key={provider.slug}
-                      id={provider.slug}
-                      label={provider.name}
-                      count={provider._count.certifications}
-                      checked={filters.providers.includes(provider.slug)}
-                      onChange={() => toggleProvider(provider.slug)}
+                      key={category.slug}
+                      id={category.slug}
+                      label={category.name}
+                      count={category._count?.certifications}
+                      checked={filters.categories.includes(category.slug)}
+                      onChange={() => toggleCategory(category.slug)}
                     />
                   ))}
-                  {providers.length > 6 && (
+                  {categories.length > 8 && (
                     <button className="text-blue-600 text-sm font-medium hover:text-blue-800 mt-2">
-                      + Show {providers.length - 6} more providers
+                      + Show {categories.length - 8} more industries
                     </button>
                   )}
                 </FilterSection>
 
-                {/* Price Range */}
-                <FilterSection title="PRICE RANGE" icon="💰">
-                  {PRICE_RANGES.map((range) => (
-                    <FilterCheckbox
-                      key={range.id}
-                      id={range.id}
-                      label={range.label}
-                      checked={filters.priceRanges.includes(range.id)}
-                      onChange={() => togglePriceRange(range.id)}
-                    />
-                  ))}
-                </FilterSection>
-
-                {/* Experience Level */}
+                {/* Experience Level - SECOND */}
                 <FilterSection title="EXPERIENCE LEVEL" icon="📈">
                   {EXPERIENCE_LEVELS.map((level) => (
                     <FilterCheckbox
@@ -594,8 +645,40 @@ function EnhancedCertificationsPage() {
                   ))}
                 </FilterSection>
 
-                {/* Study Time */}
-                <FilterSection title="STUDY TIME" icon="⏱️">
+                {/* Price Range - THIRD */}
+                <FilterSection title="PRICE RANGE" icon="💰">
+                  {PRICE_RANGES.map((range) => (
+                    <FilterCheckbox
+                      key={range.id}
+                      id={range.id}
+                      label={range.label}
+                      checked={filters.priceRanges.includes(range.id)}
+                      onChange={() => togglePriceRange(range.id)}
+                    />
+                  ))}
+                </FilterSection>
+
+                {/* Company/Providers - FOURTH */}
+                <FilterSection title="COMPANY" icon="🏢" defaultExpanded={false}>
+                  {providers.slice(0, 8).map((provider) => (
+                    <FilterCheckbox
+                      key={provider.slug}
+                      id={provider.slug}
+                      label={provider.name}
+                      count={provider._count.certifications}
+                      checked={filters.providers.includes(provider.slug)}
+                      onChange={() => toggleProvider(provider.slug)}
+                    />
+                  ))}
+                  {providers.length > 8 && (
+                    <button className="text-blue-600 text-sm font-medium hover:text-blue-800 mt-2">
+                      + Show {providers.length - 8} more companies
+                    </button>
+                  )}
+                </FilterSection>
+
+                {/* Study Time - FIFTH */}
+                <FilterSection title="STUDY TIME" icon="⏱️" defaultExpanded={false}>
                   {STUDY_TIME_RANGES.map((range) => (
                     <FilterCheckbox
                       key={range.id}
@@ -604,23 +687,6 @@ function EnhancedCertificationsPage() {
                       checked={filters.studyTimeRanges.includes(range.id)}
                       onChange={() => toggleStudyTimeRange(range.id)}
                     />
-                  ))}
-                </FilterSection>
-
-                {/* Sort Options */}
-                <FilterSection title="SORT BY" icon="📊" defaultExpanded={false}>
-                  {SORT_OPTIONS.map((option) => (
-                    <label key={option.value} className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 transition-all cursor-pointer">
-                      <input
-                        type="radio"
-                        name="sort"
-                        value={option.value}
-                        checked={filters.sort === option.value}
-                        onChange={() => changeSort(option.value)}
-                        className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                      />
-                      <span className="text-slate-700 font-medium text-sm">{option.label}</span>
-                    </label>
                   ))}
                 </FilterSection>
               </div>
@@ -817,39 +883,26 @@ function EnhancedCertificationsPage() {
                   </span>
                 </div>
 
-                {/* Providers */}
-                <FilterSection title="PROVIDERS" icon="🏢">
-                  {providers.slice(0, 8).map((provider) => (
+                {/* Industry/Categories - FIRST */}
+                <FilterSection title="INDUSTRY" icon="🎯">
+                  {categories.slice(0, 8).map((category) => (
                     <FilterCheckbox
-                      key={provider.slug}
-                      id={provider.slug}
-                      label={provider.name}
-                      count={provider._count.certifications}
-                      checked={filters.providers.includes(provider.slug)}
-                      onChange={() => toggleProvider(provider.slug)}
+                      key={category.slug}
+                      id={category.slug}
+                      label={category.name}
+                      count={category._count?.certifications}
+                      checked={filters.categories.includes(category.slug)}
+                      onChange={() => toggleCategory(category.slug)}
                     />
                   ))}
-                  {providers.length > 8 && (
+                  {categories.length > 8 && (
                     <button className="text-blue-600 text-sm font-medium hover:text-blue-800 mt-2">
-                      + Show {providers.length - 8} more providers
+                      + Show {categories.length - 8} more industries
                     </button>
                   )}
                 </FilterSection>
 
-                {/* Price Range */}
-                <FilterSection title="PRICE RANGE" icon="💰">
-                  {PRICE_RANGES.map((range) => (
-                    <FilterCheckbox
-                      key={range.id}
-                      id={range.id}
-                      label={range.label}
-                      checked={filters.priceRanges.includes(range.id)}
-                      onChange={() => togglePriceRange(range.id)}
-                    />
-                  ))}
-                </FilterSection>
-
-                {/* Experience Level */}
+                {/* Experience Level - SECOND */}
                 <FilterSection title="EXPERIENCE LEVEL" icon="📈">
                   {EXPERIENCE_LEVELS.map((level) => (
                     <FilterCheckbox
@@ -862,7 +915,39 @@ function EnhancedCertificationsPage() {
                   ))}
                 </FilterSection>
 
-                {/* Study Time */}
+                {/* Price Range - THIRD */}
+                <FilterSection title="PRICE RANGE" icon="💰">
+                  {PRICE_RANGES.map((range) => (
+                    <FilterCheckbox
+                      key={range.id}
+                      id={range.id}
+                      label={range.label}
+                      checked={filters.priceRanges.includes(range.id)}
+                      onChange={() => togglePriceRange(range.id)}
+                    />
+                  ))}
+                </FilterSection>
+
+                {/* Company/Providers - FOURTH */}
+                <FilterSection title="COMPANY" icon="🏢">
+                  {providers.slice(0, 8).map((provider) => (
+                    <FilterCheckbox
+                      key={provider.slug}
+                      id={provider.slug}
+                      label={provider.name}
+                      count={provider._count.certifications}
+                      checked={filters.providers.includes(provider.slug)}
+                      onChange={() => toggleProvider(provider.slug)}
+                    />
+                  ))}
+                  {providers.length > 8 && (
+                    <button className="text-blue-600 text-sm font-medium hover:text-blue-800 mt-2">
+                      + Show {providers.length - 8} more companies
+                    </button>
+                  )}
+                </FilterSection>
+
+                {/* Study Time - FIFTH */}
                 <FilterSection title="STUDY TIME" icon="⏱️">
                   {STUDY_TIME_RANGES.map((range) => (
                     <FilterCheckbox
@@ -872,23 +957,6 @@ function EnhancedCertificationsPage() {
                       checked={filters.studyTimeRanges.includes(range.id)}
                       onChange={() => toggleStudyTimeRange(range.id)}
                     />
-                  ))}
-                </FilterSection>
-
-                {/* Sort Options */}
-                <FilterSection title="SORT BY" icon="📊">
-                  {SORT_OPTIONS.map((option) => (
-                    <label key={option.value} className="flex items-center gap-3 p-2 rounded-lg hover:bg-slate-50 transition-all cursor-pointer">
-                      <input
-                        type="radio"
-                        name="sort"
-                        value={option.value}
-                        checked={filters.sort === option.value}
-                        onChange={() => changeSort(option.value)}
-                        className="w-4 h-4 text-blue-600 border-gray-300 focus:ring-blue-500"
-                      />
-                      <span className="text-slate-700 font-medium text-sm">{option.label}</span>
-                    </label>
                   ))}
                 </FilterSection>
 
