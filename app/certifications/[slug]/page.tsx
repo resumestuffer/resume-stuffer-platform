@@ -276,7 +276,7 @@ export default async function CertificationPage({
                   <p className="text-lg font-bold text-slate-900">
                     {certification.price === 0
                       ? "Free"
-                      : `$${certification.price.toLocaleString()}`}
+                      : `$${(certification.price / 100).toLocaleString()}`}
                   </p>
                 </div>
                 <div className="text-center">
@@ -726,7 +726,7 @@ export default async function CertificationPage({
                       The cost shown (
                       {certification.price === 0
                         ? "Free"
-                        : `$${certification.price}`}
+                        : `$${(certification.price / 100).toLocaleString()}`}
                       ) is for the official certification exam/program.
                     </p>
                   </div>
