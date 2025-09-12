@@ -24,11 +24,20 @@ export const metadata: Metadata = {
     url: "https://resumestuffer.com",
     siteName: "Resume Stuffer",
     type: "website",
+    images: [
+      {
+        url: "https://resumestuffer.com/og-image.jpg", // TODO: Add this image file to /public/
+        width: 1200,
+        height: 630,
+        alt: "Resume Stuffer - Strategic Certification Guidance for Career Advancement",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Resume Stuffer - Strategic Certification Guidance",
     description: "Expert analysis of 63+ certifications with proven ROI data",
+    images: ["https://resumestuffer.com/og-image.jpg"],
   },
 };
 
