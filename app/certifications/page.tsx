@@ -107,12 +107,10 @@ function FilterCheckbox({
 // Collapsible Filter Section
 function FilterSection({ 
   title, 
-  icon, 
   children, 
   defaultExpanded = true 
 }: { 
   title: string; 
-  icon: string; 
   children: React.ReactNode; 
   defaultExpanded?: boolean; 
 }) {
@@ -124,8 +122,7 @@ function FilterSection({
         onClick={() => setExpanded(!expanded)}
         className="flex items-center justify-between w-full mb-4 text-left"
       >
-        <h3 className="font-semibold text-slate-900 text-sm uppercase tracking-wide flex items-center gap-2">
-          <span>{icon}</span>
+        <h3 className="font-semibold text-slate-900 text-sm uppercase tracking-wide">
           {title}
         </h3>
         {expanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
@@ -614,7 +611,7 @@ function EnhancedCertificationsPage() {
                 </div>
 
                 {/* Industry/Categories - FIRST */}
-                <FilterSection title="INDUSTRY" icon="🎯">
+                <FilterSection title="INDUSTRY" >
                   {categories.slice(0, 8).map((category) => (
                     <FilterCheckbox
                       key={category.slug}
@@ -633,7 +630,7 @@ function EnhancedCertificationsPage() {
                 </FilterSection>
 
                 {/* Experience Level - SECOND */}
-                <FilterSection title="EXPERIENCE LEVEL" icon="📈">
+                <FilterSection title="EXPERIENCE LEVEL" >
                   {EXPERIENCE_LEVELS.map((level) => (
                     <FilterCheckbox
                       key={level}
@@ -646,7 +643,7 @@ function EnhancedCertificationsPage() {
                 </FilterSection>
 
                 {/* Price Range - THIRD */}
-                <FilterSection title="PRICE RANGE" icon="💰">
+                <FilterSection title="PRICE RANGE" >
                   {PRICE_RANGES.map((range) => (
                     <FilterCheckbox
                       key={range.id}
@@ -659,7 +656,7 @@ function EnhancedCertificationsPage() {
                 </FilterSection>
 
                 {/* Company/Providers - FOURTH */}
-                <FilterSection title="COMPANY" icon="🏢" defaultExpanded={false}>
+                <FilterSection title="COMPANY"  defaultExpanded={false}>
                   {providers.slice(0, 8).map((provider) => (
                     <FilterCheckbox
                       key={provider.slug}
@@ -678,7 +675,7 @@ function EnhancedCertificationsPage() {
                 </FilterSection>
 
                 {/* Study Time - FIFTH */}
-                <FilterSection title="STUDY TIME" icon="⏱️" defaultExpanded={false}>
+                <FilterSection title="STUDY TIME"  defaultExpanded={false}>
                   {STUDY_TIME_RANGES.map((range) => (
                     <FilterCheckbox
                       key={range.id}
@@ -884,7 +881,7 @@ function EnhancedCertificationsPage() {
                 </div>
 
                 {/* Industry/Categories - FIRST */}
-                <FilterSection title="INDUSTRY" icon="🎯">
+                <FilterSection title="INDUSTRY" >
                   {categories.slice(0, 8).map((category) => (
                     <FilterCheckbox
                       key={category.slug}
@@ -903,7 +900,7 @@ function EnhancedCertificationsPage() {
                 </FilterSection>
 
                 {/* Experience Level - SECOND */}
-                <FilterSection title="EXPERIENCE LEVEL" icon="📈">
+                <FilterSection title="EXPERIENCE LEVEL" >
                   {EXPERIENCE_LEVELS.map((level) => (
                     <FilterCheckbox
                       key={level}
@@ -916,7 +913,7 @@ function EnhancedCertificationsPage() {
                 </FilterSection>
 
                 {/* Price Range - THIRD */}
-                <FilterSection title="PRICE RANGE" icon="💰">
+                <FilterSection title="PRICE RANGE" >
                   {PRICE_RANGES.map((range) => (
                     <FilterCheckbox
                       key={range.id}
@@ -929,7 +926,7 @@ function EnhancedCertificationsPage() {
                 </FilterSection>
 
                 {/* Company/Providers - FOURTH */}
-                <FilterSection title="COMPANY" icon="🏢">
+                <FilterSection title="COMPANY" >
                   {providers.slice(0, 8).map((provider) => (
                     <FilterCheckbox
                       key={provider.slug}
@@ -948,7 +945,7 @@ function EnhancedCertificationsPage() {
                 </FilterSection>
 
                 {/* Study Time - FIFTH */}
-                <FilterSection title="STUDY TIME" icon="⏱️">
+                <FilterSection title="STUDY TIME" >
                   {STUDY_TIME_RANGES.map((range) => (
                     <FilterCheckbox
                       key={range.id}
