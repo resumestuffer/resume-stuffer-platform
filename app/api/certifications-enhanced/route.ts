@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma, connectWithRetry } from "@/lib/prisma";
+import { withPerformanceMonitoring } from "@/lib/performance-monitor";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -18,7 +19,7 @@ const STUDY_TIME_RANGES = {
   'intensive': { min: 101, max: 9999 }
 };
 
-export async function GET(request: NextRequest) {
+async function handleGET(request: NextRequest) {
   try {
     await connectWithRetry();
 
@@ -31,6 +32,7 @@ export async function GET(request: NextRequest) {
     const priceRanges = searchParams.get("priceRanges")?.split(",").filter(Boolean) || [];
     const experienceLevels = searchParams.get("experienceLevels")?.split(",").filter(Boolean) || [];
     const studyTimeRanges = searchParams.get("studyTimeRanges")?.split(",").filter(Boolean) || [];
+    const isHighSchoolReady = searchParams.get("isHighSchoolReady");
     const sort = searchParams.get("sort") || "salaryIncrease";
     const page = parseInt(searchParams.get("page") || "1");
 
@@ -97,6 +99,12 @@ export async function GET(request: NextRequest) {
     if (experienceLevels.length > 0) {
       where.experienceLevel = { in: experienceLevels };
     }
+
+    // Student filter
+    if (isHighSchoolReady === 'true') {
+      where.isHighSchoolReady = true;
+    }
+
 
     // Study time range filter
     if (studyTimeRanges.length > 0) {
@@ -211,6 +219,7 @@ export async function GET(request: NextRequest) {
         priceRanges,
         experienceLevels,
         studyTimeRanges,
+        isHighSchoolReady,
         sort
       }
     };
@@ -232,3 +241,5 @@ export async function GET(request: NextRequest) {
     }, { status: 500 });
   }
 }
+
+export const GET = withPerformanceMonitoring(handleGET, '/api/certifications-enhanced');

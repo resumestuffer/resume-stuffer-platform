@@ -3,7 +3,17 @@
     "allow": [
       "Bash(node:*)",
       "Bash(git add:*)",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "WebFetch(domain:resumestuffer.com)",
+      "Bash(npx prisma:*)",
+      "Bash(taskkill:*)",
+      "Bash(netstat:*)",
+      "Bash(findstr:*)",
+      "Bash(npm run dev:*)",
+      "Bash(curl:*)",
+      "Bash(timeout:*)",
+      "Bash(cmd /c:*)",
+      "Bash(tasklist)"
     ],
     "deny": [],
     "ask": []

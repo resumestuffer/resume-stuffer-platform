@@ -18,6 +18,7 @@ model Category {
   updatedAt      DateTime        @updatedAt
   certifications Certification[]
 
+  @@index([name])
   @@map("categories")
 }
 
@@ -32,6 +33,7 @@ model Provider {
   updatedAt      DateTime        @updatedAt
   certifications Certification[]
 
+  @@index([name])
   @@map("providers")
 }
 
@@ -89,6 +91,12 @@ model Certification {
   providerId         String
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
+  apprenticeshipPrep Boolean  @default(false)
+  collegeCredit      Boolean  @default(false)
+  isHighSchoolReady  Boolean  @default(false)
+  minimumAge         Int?
+  pathwayType        String[] @default([])
+  typicalAge         String?
   category           Category @relation(fields: [categoryId], references: [id])
   provider           Provider @relation(fields: [providerId], references: [id])
 
@@ -97,6 +105,19 @@ model Certification {
   @@index([isFeatured])
   @@index([salaryIncrease])
   @@index([price])
+  @@index([slug])
+  @@index([categoryId, price, salaryIncrease])
+  @@index([providerId, experienceLevel])
+  @@index([isFeatured, price, salaryIncrease])
+  @@index([categoryId, providerId])
+  @@index([studyTimeHours, price])
+  @@index([title])
+  @@index([isActive, isFeatured])
+  @@index([isHighSchoolReady])
+  @@index([pathwayType])
+  @@index([typicalAge])
+  @@index([minimumAge])
+  @@index([collegeCredit, apprenticeshipPrep])
   @@map("certifications")
 }
 

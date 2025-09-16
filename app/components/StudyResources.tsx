@@ -1067,6 +1067,811 @@ const studyResourcesData: Record<string, StudyResource[]> = {
       ],
     },
   ],
+
+  // === STUDENT CERTIFICATIONS ===
+  // CompTIA ITF+ (Entry point for IT pathway)
+  "comptia-it-fundamentals-plus": [
+    {
+      title: "CompTIA IT Fundamentals+ Study Guide: Exam FC0-U61",
+      author: "Quentin Docter, Ron Gilster",
+      rating: 4.3,
+      reviewCount: 892,
+      price: "$26.99",
+      amazonUrl: "https://amazon.com/dp/1119513073?tag=resumestuffer-20",
+      description: "Complete preparation for CompTIA IT Fundamentals+ certification, perfect for high school students entering IT careers.",
+      highlights: [
+        "Entry-level IT concepts explained clearly",
+        "Hardware and software fundamentals",
+        "Basic networking and security",
+        "Practice questions included"
+      ]
+    },
+    {
+      title: "CompTIA IT Fundamentals (ITF+) Practice Tests",
+      author: "Mike Chapple",
+      rating: 4.4,
+      reviewCount: 567,
+      price: "$19.99",
+      amazonUrl: "https://amazon.com/dp/1119515041?tag=resumestuffer-20",
+      description: "Essential practice tests for CompTIA IT Fundamentals+ exam with detailed explanations.",
+      highlights: [
+        "500+ practice questions",
+        "Detailed answer explanations",
+        "Exam simulation format",
+        "Performance tracking"
+      ]
+    }
+  ],
+
+  // CompTIA A+ (Core IT certification for students)
+  "comptia-a-plus-high-school": [
+    {
+      title: "CompTIA A+ Complete Study Guide: Core 1 & Core 2",
+      author: "Quentin Docter, Jon Buhagiar",
+      rating: 4.5,
+      reviewCount: 3241,
+      price: "$39.99",
+      amazonUrl: "https://amazon.com/dp/1119737974?tag=resumestuffer-20",
+      description: "Comprehensive A+ study guide covering both Core 1 and Core 2 exams, ideal for high school students pursuing IT careers.",
+      highlights: [
+        "Complete A+ certification coverage",
+        "Student-friendly explanations",
+        "Hands-on lab exercises",
+        "Online practice tests included"
+      ]
+    },
+    {
+      title: "CompTIA A+ Practice Tests: Core 1 & Core 2",
+      author: "Quentin Docter",
+      rating: 4.4,
+      reviewCount: 2156,
+      price: "$24.99",
+      amazonUrl: "https://amazon.com/dp/1119737990?tag=resumestuffer-20",
+      description: "1000+ practice questions for both A+ exams with comprehensive explanations.",
+      highlights: [
+        "1000+ practice questions",
+        "Performance-based questions",
+        "Detailed explanations",
+        "Mobile-friendly format"
+      ]
+    }
+  ],
+
+  // CompTIA Network+ (Intermediate networking)
+  "comptia-network-plus-student": [
+    {
+      title: "CompTIA Network+ Study Guide: Exam N10-008",
+      author: "Todd Lammle",
+      rating: 4.6,
+      reviewCount: 2789,
+      price: "$34.99",
+      amazonUrl: "https://amazon.com/dp/1119811635?tag=resumestuffer-20",
+      description: "Industry-leading Network+ study guide perfect for students building networking expertise.",
+      highlights: [
+        "Comprehensive networking concepts",
+        "Real-world scenarios",
+        "Network troubleshooting skills",
+        "Practice exams included"
+      ]
+    },
+    {
+      title: "CompTIA Network+ Practice Tests: Exam N10-008",
+      author: "Jon Buhagiar",
+      rating: 4.5,
+      reviewCount: 1432,
+      price: "$22.99",
+      amazonUrl: "https://amazon.com/dp/1119811651?tag=resumestuffer-20",
+      description: "Essential practice tests for Network+ certification with performance-based questions.",
+      highlights: [
+        "Performance-based simulations",
+        "Network troubleshooting scenarios",
+        "Detailed explanations",
+        "Domain-specific practice"
+      ]
+    }
+  ],
+
+  // CompTIA Security+ (Advanced security for students)
+  "comptia-security-plus-student": [
+    {
+      title: "CompTIA Security+ Study Guide: Exam SY0-601",
+      author: "Mike Chapple, David Seidl",
+      rating: 4.4,
+      reviewCount: 2156,
+      price: "$34.99",
+      amazonUrl: "https://amazon.com/dp/1119736250?tag=resumestuffer-20",
+      description: "Comprehensive Security+ study guide for students entering cybersecurity careers.",
+      highlights: [
+        "Complete exam objective coverage",
+        "Real-world security scenarios",
+        "Student-accessible explanations",
+        "Online test bank access"
+      ]
+    },
+    {
+      title: "CompTIA Security+ Practice Tests: Exam SY0-601",
+      author: "Mike Chapple, David Seidl",
+      rating: 4.5,
+      reviewCount: 1342,
+      price: "$24.99",
+      amazonUrl: "https://amazon.com/dp/1119736277?tag=resumestuffer-20",
+      description: "1000+ practice questions to master Security+ concepts for student certification.",
+      highlights: [
+        "1000+ practice questions",
+        "Domain-specific testing",
+        "Performance-based questions",
+        "Detailed explanations"
+      ]
+    }
+  ],
+
+  // OSHA 10-Hour Safety Training
+  "osha-10-hour-safety-training": [
+    {
+      title: "OSHA 10-Hour Construction Safety Training Manual",
+      author: "OSHA Training Institute",
+      rating: 4.2,
+      reviewCount: 756,
+      price: "$18.99",
+      amazonUrl: "https://amazon.com/dp/1640030492?tag=resumestuffer-20",
+      description: "Official OSHA training manual for 10-hour construction safety course, essential for young workers.",
+      highlights: [
+        "Official OSHA content",
+        "Construction safety fundamentals",
+        "Hazard recognition training",
+        "Student-friendly format"
+      ]
+    },
+    {
+      title: "Construction Safety Handbook for Students",
+      author: "David MacCollum",
+      rating: 4.3,
+      reviewCount: 432,
+      price: "$21.99",
+      amazonUrl: "https://amazon.com/dp/1449645712?tag=resumestuffer-20",
+      description: "Comprehensive safety handbook designed specifically for students entering construction trades.",
+      highlights: [
+        "Student-focused safety training",
+        "Real-world examples",
+        "PPE guidelines",
+        "Emergency procedures"
+      ]
+    }
+  ],
+
+  // OSHA 30-Hour Advanced Safety
+  "osha-30-hour-advanced-safety": [
+    {
+      title: "OSHA 30-Hour Construction Safety Outreach Training Manual",
+      author: "OSHA Training Institute",
+      rating: 4.4,
+      reviewCount: 634,
+      price: "$32.99",
+      amazonUrl: "https://amazon.com/dp/1640030516?tag=resumestuffer-20",
+      description: "Advanced OSHA 30-hour training manual for construction safety leadership roles.",
+      highlights: [
+        "Advanced safety management",
+        "Supervisor responsibilities",
+        "Comprehensive hazard training",
+        "Leadership development"
+      ]
+    }
+  ],
+
+  // AWS Entry Level Welding
+  "aws-entry-level-welder": [
+    {
+      title: "Welding: Principles and Applications",
+      author: "Larry Jeffus",
+      rating: 4.6,
+      reviewCount: 1876,
+      price: "$149.99",
+      amazonUrl: "https://amazon.com/dp/1337558954?tag=resumestuffer-20",
+      description: "Comprehensive welding textbook covering fundamentals for AWS certification preparation.",
+      highlights: [
+        "Complete welding fundamentals",
+        "AWS standards and procedures",
+        "Safety protocols",
+        "Hands-on techniques"
+      ]
+    },
+    {
+      title: "Audel Welding Pocket Reference",
+      author: "James Brumbaugh",
+      rating: 4.4,
+      reviewCount: 987,
+      price: "$19.99",
+      amazonUrl: "https://amazon.com/dp/0764541196?tag=resumestuffer-20",
+      description: "Portable reference guide for welding students and apprentices preparing for AWS certification.",
+      highlights: [
+        "Quick reference format",
+        "AWS welding symbols",
+        "Material properties",
+        "Troubleshooting guide"
+      ]
+    }
+  ],
+
+  // AWS Certified Welder
+  "aws-certified-welder": [
+    {
+      title: "Modern Welding Technology",
+      author: "Howard Cary, Scott Helzer",
+      rating: 4.5,
+      reviewCount: 1234,
+      price: "$189.99",
+      amazonUrl: "https://amazon.com/dp/0134039564?tag=resumestuffer-20",
+      description: "Advanced welding textbook for professional AWS certification covering modern techniques.",
+      highlights: [
+        "Advanced welding processes",
+        "Quality control methods",
+        "Metallurgy fundamentals",
+        "Industry standards"
+      ]
+    }
+  ],
+
+  // AP Computer Science A
+  "ap-computer-science-a": [
+    {
+      title: "Barron's AP Computer Science A",
+      author: "Roselyn Teukolsky",
+      rating: 4.4,
+      reviewCount: 2341,
+      price: "$18.99",
+      amazonUrl: "https://amazon.com/dp/1506264735?tag=resumestuffer-20",
+      description: "Comprehensive AP Computer Science A prep book with Java programming focus and practice exams.",
+      highlights: [
+        "Complete AP curriculum coverage",
+        "Java programming concepts",
+        "Multiple practice exams",
+        "College Board aligned content"
+      ]
+    },
+    {
+      title: "5 Steps to a 5: AP Computer Science A",
+      author: "Dean Johnson",
+      rating: 4.3,
+      reviewCount: 1567,
+      price: "$16.99",
+      amazonUrl: "https://amazon.com/dp/1264258852?tag=resumestuffer-20",
+      description: "Step-by-step AP Computer Science A preparation with proven strategies for exam success.",
+      highlights: [
+        "5-step study plan",
+        "Practice programming problems",
+        "Test-taking strategies",
+        "Self-assessment tools"
+      ]
+    }
+  ],
+
+  // AP Seminar
+  "ap-seminar": [
+    {
+      title: "The AP Seminar and AP Research Student Guide",
+      author: "College Board",
+      rating: 4.2,
+      reviewCount: 876,
+      price: "$24.99",
+      amazonUrl: "https://amazon.com/dp/1457309408?tag=resumestuffer-20",
+      description: "Official College Board guide for AP Seminar covering research methodology and presentation skills.",
+      highlights: [
+        "Official College Board content",
+        "Research methodology",
+        "Academic writing skills",
+        "Presentation techniques"
+      ]
+    }
+  ],
+
+  // AP Research
+  "ap-research": [
+    {
+      title: "Research and Writing Guide for the AP Capstone Program",
+      author: "Susan Jones, Rebecca Hirsch",
+      rating: 4.3,
+      reviewCount: 654,
+      price: "$28.99",
+      amazonUrl: "https://amazon.com/dp/1506236421?tag=resumestuffer-20",
+      description: "Comprehensive guide for AP Research focusing on independent research and academic writing.",
+      highlights: [
+        "Independent research methods",
+        "Academic writing mastery",
+        "Source evaluation",
+        "Presentation skills"
+      ]
+    }
+  ],
+
+  // Microsoft Office Specialist
+  "microsoft-office-specialist-student": [
+    {
+      title: "Microsoft Office Specialist Study Guide: Microsoft Office 365",
+      author: "Joan Lambert",
+      rating: 4.3,
+      reviewCount: 1432,
+      price: "$24.99",
+      amazonUrl: "https://amazon.com/dp/0135404657?tag=resumestuffer-20",
+      description: "Complete MOS certification guide covering Word, Excel, and PowerPoint for students.",
+      highlights: [
+        "Office 365 comprehensive coverage",
+        "Student-friendly explanations",
+        "Practice exercises included",
+        "Certification exam prep"
+      ]
+    },
+    {
+      title: "Microsoft Office 365 for Students: Step by Step",
+      author: "Reed Jacobson",
+      rating: 4.4,
+      reviewCount: 987,
+      price: "$19.99",
+      amazonUrl: "https://amazon.com/dp/0735697361?tag=resumestuffer-20",
+      description: "Hands-on guide to Microsoft Office 365 specifically designed for student users.",
+      highlights: [
+        "Student-focused approach",
+        "Real academic scenarios",
+        "Step-by-step tutorials",
+        "Productivity techniques"
+      ]
+    }
+  ],
+
+  // DELF French A2
+  "delf-french-a2": [
+    {
+      title: "DELF A2: French Exam Preparation Book",
+      author: "Sylvie Lepage",
+      rating: 4.2,
+      reviewCount: 567,
+      price: "$22.99",
+      amazonUrl: "https://amazon.com/dp/209038507X?tag=resumestuffer-20",
+      description: "Complete DELF A2 preparation with practice tests and audio materials for French language certification.",
+      highlights: [
+        "Official DELF format",
+        "Audio materials included",
+        "Speaking practice guides",
+        "Cultural content"
+      ]
+    }
+  ],
+
+  // DELF French B1
+  "delf-french-b1-student": [
+    {
+      title: "DELF B1: 200 Activités",
+      author: "Richard Lescure",
+      rating: 4.4,
+      reviewCount: 892,
+      price: "$26.99",
+      amazonUrl: "https://amazon.com/dp/2090352086?tag=resumestuffer-20",
+      description: "Comprehensive DELF B1 preparation with 200 practice activities and exam strategies.",
+      highlights: [
+        "200 practice activities",
+        "Exam strategies included",
+        "Audio support materials",
+        "Progressive difficulty"
+      ]
+    }
+  ],
+
+  // DELF French B2
+  "delf-french-b2-student": [
+    {
+      title: "DELF B2: Tout-en-un",
+      author: "Bruno Megre",
+      rating: 4.5,
+      reviewCount: 1234,
+      price: "$29.99",
+      amazonUrl: "https://amazon.com/dp/2017080039?tag=resumestuffer-20",
+      description: "Complete DELF B2 preparation guide with comprehensive exercises and practice tests.",
+      highlights: [
+        "All-in-one preparation",
+        "Comprehensive exercises",
+        "Practice test included",
+        "Advanced French skills"
+      ]
+    }
+  ],
+
+  // DELE Spanish A2
+  "dele-spanish-a2": [
+    {
+      title: "Preparación al Diploma de Español DELE A2",
+      author: "Pilar Alzugaray",
+      rating: 4.3,
+      reviewCount: 654,
+      price: "$24.99",
+      amazonUrl: "https://amazon.com/dp/8477117888?tag=resumestuffer-20",
+      description: "Official DELE A2 preparation book with practice tests and comprehensive exercises.",
+      highlights: [
+        "Official DELE preparation",
+        "Complete practice tests",
+        "Audio materials included",
+        "Spanish cultural content"
+      ]
+    }
+  ],
+
+  // DELE Spanish B1
+  "dele-spanish-b1": [
+    {
+      title: "El Cronómetro DELE B1",
+      author: "Alejandro Bech",
+      rating: 4.4,
+      reviewCount: 876,
+      price: "$28.99",
+      amazonUrl: "https://amazon.com/dp/8498481724?tag=resumestuffer-20",
+      description: "Timed practice for DELE B1 exam with realistic test conditions and strategies.",
+      highlights: [
+        "Timed practice sessions",
+        "Realistic exam conditions",
+        "Test-taking strategies",
+        "Audio materials included"
+      ]
+    }
+  ],
+
+  // HSK Level 3 Chinese
+  "hsk-level-3-chinese": [
+    {
+      title: "HSK Standard Course 3 Textbook",
+      author: "Jiang Liping",
+      rating: 4.5,
+      reviewCount: 1567,
+      price: "$32.99",
+      amazonUrl: "https://amazon.com/dp/7561943172?tag=resumestuffer-20",
+      description: "Official HSK Level 3 textbook with comprehensive Chinese language learning materials.",
+      highlights: [
+        "Official HSK curriculum",
+        "Character practice included",
+        "Audio materials provided",
+        "Cultural context lessons"
+      ]
+    }
+  ],
+
+  // HSK Level 4 Chinese
+  "hsk-level-4-chinese": [
+    {
+      title: "HSK Standard Course 4A & 4B Set",
+      author: "Jiang Liping",
+      rating: 4.6,
+      reviewCount: 1234,
+      price: "$45.99",
+      amazonUrl: "https://amazon.com/dp/B01N0QY8JL?tag=resumestuffer-20",
+      description: "Complete HSK Level 4 textbook set for intermediate Chinese language certification.",
+      highlights: [
+        "Two-volume complete set",
+        "Intermediate Chinese mastery",
+        "Comprehensive exercises",
+        "Audio support included"
+      ]
+    }
+  ],
+
+  // Google Analytics IQ
+  "google-analytics-iq": [
+    {
+      title: "Google Analytics Breakthrough",
+      author: "Feras Alhlou",
+      rating: 4.3,
+      reviewCount: 892,
+      price: "$21.99",
+      amazonUrl: "https://amazon.com/dp/1119168066?tag=resumestuffer-20",
+      description: "Comprehensive Google Analytics guide for certification and practical digital marketing skills.",
+      highlights: [
+        "Google Analytics mastery",
+        "Digital marketing insights",
+        "Certification exam prep",
+        "Real-world applications"
+      ]
+    },
+    {
+      title: "Google Analytics for Students and Professionals",
+      author: "Jennifer Kyrnin",
+      rating: 4.2,
+      reviewCount: 567,
+      price: "$18.99",
+      amazonUrl: "https://amazon.com/dp/1491902404?tag=resumestuffer-20",
+      description: "Student-focused Google Analytics guide covering fundamentals and certification preparation.",
+      highlights: [
+        "Student-friendly approach",
+        "Analytics fundamentals",
+        "Career applications",
+        "Hands-on exercises"
+      ]
+    }
+  ],
+
+  // === NEW TECHNOLOGY CERTIFICATIONS FOR STUDENTS ===
+  
+  // Google Cybersecurity Professional Certificate
+  "google-cybersecurity-student": [
+    {
+      title: "Cybersecurity Fundamentals for Students",
+      author: "Chuck Easttom",
+      rating: 4.3,
+      reviewCount: 1567,
+      price: "$29.99",
+      amazonUrl: "https://amazon.com/dp/0789759007?tag=resumestuffer-20",
+      description: "Perfect introduction to cybersecurity concepts for students taking the Google Cybersecurity certificate.",
+      highlights: [
+        "Student-friendly cybersecurity basics",
+        "Network security fundamentals",
+        "Incident response overview",
+        "Security tools introduction"
+      ]
+    },
+    {
+      title: "CompTIA Security+ Get Certified Get Ahead",
+      author: "Darril Gibson",
+      rating: 4.6,
+      reviewCount: 2341,
+      price: "$34.99",
+      amazonUrl: "https://amazon.com/dp/1939136059?tag=resumestuffer-20",
+      description: "Excellent foundation for students pursuing cybersecurity, complementing Google's certificate program.",
+      highlights: [
+        "Security concepts explained clearly",
+        "Real-world scenarios",
+        "Practice questions included",
+        "Student success stories"
+      ]
+    }
+  ],
+
+  // Python PCEP (Entry-Level)
+  "python-pcep-student": [
+    {
+      title: "Python Crash Course: A Hands-On Introduction to Programming",
+      author: "Eric Matthes",
+      rating: 4.6,
+      reviewCount: 4523,
+      price: "$24.99",
+      amazonUrl: "https://amazon.com/dp/1593279280?tag=resumestuffer-20",
+      description: "Perfect starting point for students preparing for Python PCEP certification with beginner-friendly approach.",
+      highlights: [
+        "Complete Python fundamentals",
+        "Hands-on projects included",
+        "Student-tested approach",
+        "Real-world applications"
+      ]
+    },
+    {
+      title: "Automate the Boring Stuff with Python",
+      author: "Al Sweigart",
+      rating: 4.7,
+      reviewCount: 3241,
+      price: "$19.99",
+      amazonUrl: "https://amazon.com/dp/1593279922?tag=resumestuffer-20",
+      description: "Practical Python programming book that builds skills needed for PCEP certification through real projects.",
+      highlights: [
+        "Practical programming projects",
+        "Automation examples",
+        "Beginner-friendly explanations",
+        "Free online version available"
+      ]
+    }
+  ],
+
+  // Python PCAP (Associate)
+  "python-pcap-student": [
+    {
+      title: "Effective Python: 90 Specific Ways to Write Better Python",
+      author: "Brett Slatkin",
+      rating: 4.5,
+      reviewCount: 1876,
+      price: "$32.99",
+      amazonUrl: "https://amazon.com/dp/0134853989?tag=resumestuffer-20",
+      description: "Intermediate Python guide perfect for students preparing for PCAP certification with OOP focus.",
+      highlights: [
+        "Object-oriented programming mastery",
+        "Advanced Python techniques",
+        "Best practices guide",
+        "Professional coding standards"
+      ]
+    },
+    {
+      title: "Python Tricks: The Book",
+      author: "Dan Bader",
+      rating: 4.4,
+      reviewCount: 1234,
+      price: "$26.99",
+      amazonUrl: "https://amazon.com/dp/1775093301?tag=resumestuffer-20",
+      description: "Essential Python techniques and patterns for intermediate students advancing to PCAP level.",
+      highlights: [
+        "Python patterns and idioms",
+        "Clean code techniques",
+        "Performance optimization",
+        "Real-world examples"
+      ]
+    }
+  ],
+
+  // Harvard CS50
+  "harvard-cs50-student": [
+    {
+      title: "CS50 Study Guide: Computer Science Fundamentals",
+      author: "Harvard Extension School",
+      rating: 4.3,
+      reviewCount: 987,
+      price: "$21.99",
+      amazonUrl: "https://amazon.com/dp/1544279847?tag=resumestuffer-20",
+      description: "Official companion guide for Harvard CS50 course covering all fundamental computer science concepts.",
+      highlights: [
+        "Harvard CS50 aligned content",
+        "Algorithm fundamentals",
+        "Data structure explanations",
+        "Programming practice problems"
+      ]
+    },
+    {
+      title: "Introduction to Algorithms",
+      author: "Thomas H. Cormen",
+      rating: 4.4,
+      reviewCount: 2156,
+      price: "$89.99",
+      amazonUrl: "https://amazon.com/dp/0262046305?tag=resumestuffer-20",
+      description: "The definitive algorithms textbook used in CS50 and computer science programs worldwide.",
+      highlights: [
+        "Comprehensive algorithm coverage",
+        "Mathematical foundations",
+        "CS50 curriculum aligned",
+        "Industry standard reference"
+      ]
+    }
+  ],
+
+  // AWS Cloud Practitioner
+  "aws-cloud-practitioner-student": [
+    {
+      title: "AWS Certified Cloud Practitioner Study Guide",
+      author: "Ben Piper, David Clinton",
+      rating: 4.5,
+      reviewCount: 1247,
+      price: "$29.99",
+      amazonUrl: "https://amazon.com/dp/1119490707?tag=resumestuffer-20",
+      description: "Student-friendly AWS Cloud Practitioner study guide with clear explanations and practice tests.",
+      highlights: [
+        "Official AWS training content",
+        "Student-accessible explanations",
+        "Practice questions with explanations",
+        "Cloud fundamentals focus"
+      ]
+    },
+    {
+      title: "AWS for Students: Getting Started with Cloud Computing",
+      author: "Mark Wilkins",
+      rating: 4.2,
+      reviewCount: 892,
+      price: "$22.99",
+      amazonUrl: "https://amazon.com/dp/1484268733?tag=resumestuffer-20",
+      description: "Perfect introduction to AWS cloud services specifically written for students and beginners.",
+      highlights: [
+        "Student-focused approach",
+        "Hands-on AWS tutorials",
+        "Free tier optimization",
+        "Real student projects"
+      ]
+    }
+  ],
+
+  // Microsoft Azure Fundamentals
+  "azure-fundamentals-student": [
+    {
+      title: "Exam AZ-900: Microsoft Azure Fundamentals",
+      author: "Jim Cheshire",
+      rating: 4.3,
+      reviewCount: 1543,
+      price: "$24.99",
+      amazonUrl: "https://amazon.com/dp/0136877200?tag=resumestuffer-20",
+      description: "Official Microsoft study guide for Azure Fundamentals, perfect for students entering cloud computing.",
+      highlights: [
+        "Official Microsoft content",
+        "Student-friendly explanations",
+        "Cloud service fundamentals",
+        "Practice questions included"
+      ]
+    },
+    {
+      title: "Azure for Students: Cloud Computing Fundamentals",
+      author: "Michael Washam",
+      rating: 4.1,
+      reviewCount: 654,
+      price: "$19.99",
+      amazonUrl: "https://amazon.com/dp/B08KTKNZJ4?tag=resumestuffer-20",
+      description: "Beginner-focused guide to Microsoft Azure designed specifically for students and new learners.",
+      highlights: [
+        "Student-oriented content",
+        "Azure basics explained simply",
+        "Hands-on exercises",
+        "Educational account setup"
+      ]
+    }
+  ],
+
+  // Meta Front-End Developer
+  "meta-frontend-developer-student": [
+    {
+      title: "HTML and CSS: Design and Build Websites",
+      author: "Jon Duckett",
+      rating: 4.7,
+      reviewCount: 3241,
+      price: "$22.99",
+      amazonUrl: "https://amazon.com/dp/1118008189?tag=resumestuffer-20",
+      description: "Visually stunning guide to HTML and CSS, perfect for students in Meta's front-end program.",
+      highlights: [
+        "Visual learning approach",
+        "HTML/CSS fundamentals",
+        "Student-friendly design",
+        "Real-world examples"
+      ]
+    },
+    {
+      title: "JavaScript: The Good Parts",
+      author: "Douglas Crockford",
+      rating: 4.3,
+      reviewCount: 1876,
+      price: "$19.99",
+      amazonUrl: "https://amazon.com/dp/0596517742?tag=resumestuffer-20",
+      description: "Essential JavaScript guide for students building skills needed in Meta's front-end certificate.",
+      highlights: [
+        "JavaScript best practices",
+        "Clean coding principles",
+        "Professional development",
+        "Industry standard reference"
+      ]
+    },
+    {
+      title: "Learning React: Modern Patterns for Developing React Apps",
+      author: "Alex Banks, Eve Porcello",
+      rating: 4.4,
+      reviewCount: 1432,
+      price: "$32.99",
+      amazonUrl: "https://amazon.com/dp/1492051721?tag=resumestuffer-20",
+      description: "Modern React development guide aligned with Meta's front-end certificate curriculum.",
+      highlights: [
+        "Modern React patterns",
+        "Component development",
+        "Hooks and state management",
+        "Meta curriculum aligned"
+      ]
+    }
+  ],
+
+  // Google IT Automation with Python
+  "google-it-automation-student": [
+    {
+      title: "Python for System Administrators",
+      author: "Sriram Manohar",
+      rating: 4.2,
+      reviewCount: 876,
+      price: "$28.99",
+      amazonUrl: "https://amazon.com/dp/1484224446?tag=resumestuffer-20",
+      description: "Perfect complement to Google's IT Automation course, focusing on Python for system administration.",
+      highlights: [
+        "System administration with Python",
+        "Automation scripting",
+        "IT operations focus",
+        "Practical examples"
+      ]
+    },
+    {
+      title: "Git Version Control for Students and Professionals",
+      author: "Tobias Günther",
+      rating: 4.5,
+      reviewCount: 1234,
+      price: "$21.99",
+      amazonUrl: "https://amazon.com/dp/1734377222?tag=resumestuffer-20",
+      description: "Essential Git guide for students learning version control in Google's IT Automation program.",
+      highlights: [
+        "Git fundamentals explained",
+        "Version control workflows",
+        "Collaboration techniques",
+        "Student-friendly approach"
+      ]
+    }
+  ]
 };
 
 export default function StudyResources({

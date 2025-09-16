@@ -4,7 +4,7 @@ export default function Footer() {
   return (
     <footer className="bg-slate-800 text-white px-4 sm:px-6 lg:px-8 py-12">
       <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
           <div>
             <div className="flex items-center space-x-2 mb-4">
               <div className="text-2xl">📄</div>
@@ -121,6 +121,52 @@ export default function Footer() {
                   className="hover:text-blue-400 transition-colors"
                 >
                   Cybersecurity
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-semibold mb-4 text-green-400">For Students</h3>
+            <ul className="space-y-2 text-slate-300">
+              <li>
+                <Link
+                  href="/students"
+                  className="hover:text-green-400 transition-colors"
+                >
+                  Student Overview
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/students/college-prep"
+                  className="hover:text-green-400 transition-colors"
+                >
+                  🎓 College Prep
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/students/tech-careers"
+                  className="hover:text-green-400 transition-colors"
+                >
+                  💻 Tech Careers
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/students/skilled-trades"
+                  className="hover:text-green-400 transition-colors"
+                >
+                  🔧 Skilled Trades
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/students/business-skills"
+                  className="hover:text-green-400 transition-colors"
+                >
+                  💼 Business Skills
                 </Link>
               </li>
             </ul>

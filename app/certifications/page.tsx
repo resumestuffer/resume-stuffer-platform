@@ -27,6 +27,7 @@ interface FilterState {
   priceRanges: string[];
   experienceLevels: string[];
   studyTimeRanges: string[];
+  isHighSchoolReady: boolean;
   sort: string;
   page: number;
 }
@@ -151,6 +152,8 @@ function EnhancedCertificationsPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [isFiltering, setIsFiltering] = useState(false);
+  const [showAllCategories, setShowAllCategories] = useState(false);
+  const [showAllProviders, setShowAllProviders] = useState(false);
   const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
   const urlUpdateTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -162,6 +165,7 @@ function EnhancedCertificationsPage() {
     priceRanges: [],
     experienceLevels: [],
     studyTimeRanges: [],
+    isHighSchoolReady: false,
     sort: "salaryIncrease",
     page: 1,
   });
@@ -175,6 +179,7 @@ function EnhancedCertificationsPage() {
       priceRanges: searchParams.get("priceRanges")?.split(",").filter(Boolean) || [],
       experienceLevels: searchParams.get("experienceLevels")?.split(",").filter(Boolean) || [],
       studyTimeRanges: searchParams.get("studyTimeRanges")?.split(",").filter(Boolean) || [],
+      isHighSchoolReady: searchParams.get("isHighSchoolReady") === "true",
       sort: searchParams.get("sort") || "salaryIncrease",
       page: parseInt(searchParams.get("page") || "1"),
     };
@@ -197,6 +202,7 @@ function EnhancedCertificationsPage() {
       if (newFilters.priceRanges.length > 0) params.set("priceRanges", newFilters.priceRanges.join(","));
       if (newFilters.experienceLevels.length > 0) params.set("experienceLevels", newFilters.experienceLevels.join(","));
       if (newFilters.studyTimeRanges.length > 0) params.set("studyTimeRanges", newFilters.studyTimeRanges.join(","));
+      if (newFilters.isHighSchoolReady) params.set("isHighSchoolReady", "true");
       if (newFilters.sort !== "salaryIncrease") params.set("sort", newFilters.sort);
       if (newFilters.page > 1) params.set("page", newFilters.page.toString());
 
@@ -222,6 +228,7 @@ function EnhancedCertificationsPage() {
         if (currentFilters.priceRanges.length > 0) apiParams.set("priceRanges", currentFilters.priceRanges.join(","));
         if (currentFilters.experienceLevels.length > 0) apiParams.set("experienceLevels", currentFilters.experienceLevels.join(","));
         if (currentFilters.studyTimeRanges.length > 0) apiParams.set("studyTimeRanges", currentFilters.studyTimeRanges.join(","));
+        if (currentFilters.isHighSchoolReady) apiParams.set("isHighSchoolReady", "true");
         apiParams.set("sort", currentFilters.sort);
         apiParams.set("page", currentFilters.page.toString());
 
@@ -256,8 +263,6 @@ function EnhancedCertificationsPage() {
         const categoriesData = await categoriesResponse.json();
         setProviders(providersData);
         setCategories(categoriesData);
-        
-        await fetchData(filters, true);
       } catch (error) {
         console.error("Error loading initial data:", error);
       } finally {
@@ -352,6 +357,12 @@ function EnhancedCertificationsPage() {
     updateURL(newFilters);
   };
 
+  const toggleHighSchoolReady = () => {
+    const newFilters = { ...filters, isHighSchoolReady: !filters.isHighSchoolReady, page: 1 };
+    setFilters(newFilters);
+    updateURL(newFilters);
+  };
+
   const changeSort = (newSort: string) => {
     const newFilters = { ...filters, sort: newSort, page: 1 };
     setFilters(newFilters);
@@ -367,6 +378,7 @@ function EnhancedCertificationsPage() {
       priceRanges: [],
       experienceLevels: [],
       studyTimeRanges: [],
+      isHighSchoolReady: false,
       sort: "salaryIncrease",
       page: 1,
     };
@@ -442,6 +454,14 @@ function EnhancedCertificationsPage() {
         });
       }
     });
+
+    if (filters.isHighSchoolReady) {
+      chips.push({
+        id: 'high-school-ready',
+        label: 'High School Ready',
+        remove: () => toggleHighSchoolReady()
+      });
+    }
 
     return chips;
   };
@@ -612,7 +632,7 @@ function EnhancedCertificationsPage() {
 
                 {/* Industry/Categories - FIRST */}
                 <FilterSection title="INDUSTRY" >
-                  {categories.slice(0, 8).map((category) => (
+                  {(showAllCategories ? categories : categories.slice(0, 8)).map((category) => (
                     <FilterCheckbox
                       key={category.slug}
                       id={category.slug}
@@ -623,8 +643,14 @@ function EnhancedCertificationsPage() {
                     />
                   ))}
                   {categories.length > 8 && (
-                    <button className="text-blue-600 text-sm font-medium hover:text-blue-800 mt-2">
-                      + Show {categories.length - 8} more industries
+                    <button 
+                      onClick={() => setShowAllCategories(!showAllCategories)}
+                      className="text-blue-600 text-sm font-medium hover:text-blue-800 mt-2"
+                    >
+                      {showAllCategories 
+                        ? '- Show fewer industries'
+                        : `+ Show ${categories.length - 8} more industries`
+                      }
                     </button>
                   )}
                 </FilterSection>
@@ -657,7 +683,7 @@ function EnhancedCertificationsPage() {
 
                 {/* Company/Providers - FOURTH */}
                 <FilterSection title="COMPANY"  defaultExpanded={false}>
-                  {providers.slice(0, 8).map((provider) => (
+                  {(showAllProviders ? providers : providers.slice(0, 8)).map((provider) => (
                     <FilterCheckbox
                       key={provider.slug}
                       id={provider.slug}
@@ -668,8 +694,14 @@ function EnhancedCertificationsPage() {
                     />
                   ))}
                   {providers.length > 8 && (
-                    <button className="text-blue-600 text-sm font-medium hover:text-blue-800 mt-2">
-                      + Show {providers.length - 8} more companies
+                    <button 
+                      onClick={() => setShowAllProviders(!showAllProviders)}
+                      className="text-blue-600 text-sm font-medium hover:text-blue-800 mt-2"
+                    >
+                      {showAllProviders 
+                        ? '- Show fewer companies'
+                        : `+ Show ${providers.length - 8} more companies`
+                      }
                     </button>
                   )}
                 </FilterSection>
@@ -685,6 +717,16 @@ function EnhancedCertificationsPage() {
                       onChange={() => toggleStudyTimeRange(range.id)}
                     />
                   ))}
+                </FilterSection>
+
+                {/* Student Ready - SIXTH */}
+                <FilterSection title="STUDENT CERTIFICATIONS" defaultExpanded={false}>
+                  <FilterCheckbox
+                    id="high-school-ready"
+                    label="High School Ready"
+                    checked={filters.isHighSchoolReady}
+                    onChange={toggleHighSchoolReady}
+                  />
                 </FilterSection>
               </div>
             </div>
@@ -882,7 +924,7 @@ function EnhancedCertificationsPage() {
 
                 {/* Industry/Categories - FIRST */}
                 <FilterSection title="INDUSTRY" >
-                  {categories.slice(0, 8).map((category) => (
+                  {(showAllCategories ? categories : categories.slice(0, 8)).map((category) => (
                     <FilterCheckbox
                       key={category.slug}
                       id={category.slug}
@@ -893,8 +935,14 @@ function EnhancedCertificationsPage() {
                     />
                   ))}
                   {categories.length > 8 && (
-                    <button className="text-blue-600 text-sm font-medium hover:text-blue-800 mt-2">
-                      + Show {categories.length - 8} more industries
+                    <button 
+                      onClick={() => setShowAllCategories(!showAllCategories)}
+                      className="text-blue-600 text-sm font-medium hover:text-blue-800 mt-2"
+                    >
+                      {showAllCategories 
+                        ? '- Show fewer industries'
+                        : `+ Show ${categories.length - 8} more industries`
+                      }
                     </button>
                   )}
                 </FilterSection>
@@ -927,7 +975,7 @@ function EnhancedCertificationsPage() {
 
                 {/* Company/Providers - FOURTH */}
                 <FilterSection title="COMPANY" >
-                  {providers.slice(0, 8).map((provider) => (
+                  {(showAllProviders ? providers : providers.slice(0, 8)).map((provider) => (
                     <FilterCheckbox
                       key={provider.slug}
                       id={provider.slug}
@@ -938,8 +986,14 @@ function EnhancedCertificationsPage() {
                     />
                   ))}
                   {providers.length > 8 && (
-                    <button className="text-blue-600 text-sm font-medium hover:text-blue-800 mt-2">
-                      + Show {providers.length - 8} more companies
+                    <button 
+                      onClick={() => setShowAllProviders(!showAllProviders)}
+                      className="text-blue-600 text-sm font-medium hover:text-blue-800 mt-2"
+                    >
+                      {showAllProviders 
+                        ? '- Show fewer companies'
+                        : `+ Show ${providers.length - 8} more companies`
+                      }
                     </button>
                   )}
                 </FilterSection>
@@ -955,6 +1009,16 @@ function EnhancedCertificationsPage() {
                       onChange={() => toggleStudyTimeRange(range.id)}
                     />
                   ))}
+                </FilterSection>
+
+                {/* Student Ready - SIXTH */}
+                <FilterSection title="STUDENT CERTIFICATIONS" >
+                  <FilterCheckbox
+                    id="high-school-ready"
+                    label="High School Ready"
+                    checked={filters.isHighSchoolReady}
+                    onChange={toggleHighSchoolReady}
+                  />
                 </FilterSection>
 
                 {/* Action Buttons */}
