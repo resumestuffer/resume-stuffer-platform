@@ -15,6 +15,9 @@ tags:
     "Technology",
   ]
 featured: true
+ogImage: "/og-image.jpg"
+twitterImage: "/og-image.jpg"
+linkedinImage: "/og-image.jpg"
 ---
 
 AWS certifications can transform your career, but what do they actually cost? This comprehensive analysis breaks down every expense you'll encounter when pursuing [AWS Cloud Practitioner](https://resumestuffer.com/certifications/aws-cloud-practitioner), [Solutions Architect Associate](https://resumestuffer.com/certifications/aws-solutions-architect-associate), or [Developer Associate](https://resumestuffer.com/certifications/aws-developer-associate) certifications.

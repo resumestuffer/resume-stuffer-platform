@@ -15,6 +15,9 @@ tags:
     "Teen Career Development",
   ]
 featured: true
+ogImage: "/og-image.jpg"
+twitterImage: "/og-image.jpg"
+linkedinImage: "/og-image.jpg"
 ---
 
 You're a high school student (or parent) wondering if certifications are worth the time when you should be focusing on grades and college prep.

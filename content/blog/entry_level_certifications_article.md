@@ -8,6 +8,9 @@ metaTitle: "Entry-Level Certifications 2025: Which Actually Lead to Job Offers"
 metaDescription: "Comprehensive guide to entry-level certifications with real job placement data. Employer preferences, salary outcomes, and strategic guidance for career starters and career changers."
 tags: ["Entry Level Certifications", "Career Change", "Job Placement", "Professional Development", "Career Foundation"]
 featured: false
+ogImage: "/og-image.jpg"
+twitterImage: "/og-image.jpg"
+linkedinImage: "/og-image.jpg"
 ---
 
 You're starting your career and seeing certification requirements everywhere.

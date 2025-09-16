@@ -9,6 +9,9 @@ metaTitle: "Certification ROI Calculator 2025: Calculate Your Investment Return"
 metaDescription: "Calculate real certification ROI with our practical framework. Includes salary impact data, payback timelines, hidden costs analysis, and financial decision-making tools for smart certification investments."
 tags: ["Certification ROI", "Career Investment", "Salary Increase", "Certification Cost Analysis", "Professional Development ROI", "Financial Planning"]
 featured: false
+ogImage: "/og-image.jpg"
+twitterImage: "/og-image.jpg"
+linkedinImage: "/og-image.jpg"
 ---
 
 You're staring at a $500 certification cost and wondering if it will actually pay for itself.

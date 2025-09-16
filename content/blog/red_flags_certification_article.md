@@ -8,6 +8,9 @@ metaTitle: "Certification Red Flags 2025: How to Spot Worthless Programs Before 
 metaDescription: "Comprehensive guide to identifying certification scams and low-value programs. Real warning signs, validation techniques, and expert analysis to protect your career investment."
 tags: ["Certification Scams", "Career Development", "Professional Development", "Education Fraud", "Certification Strategy"]
 featured: false
+ogImage: "/og-image.jpg"
+twitterImage: "/og-image.jpg"
+linkedinImage: "/og-image.jpg"
 ---
 
 Here's something that might surprise you: Most certification scams hide in plain sight.

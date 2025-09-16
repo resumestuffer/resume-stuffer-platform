@@ -8,6 +8,9 @@ metaTitle: "Free vs Paid Certifications 2025: When Zero Cost Delivers Real Value
 metaDescription: "Data-driven comparison of free and paid certifications. Real employer adoption rates, salary impacts, and strategic guidance for choosing zero-cost credentials that advance careers."
 tags: ["Free Certifications", "Career Development", "Certification Strategy", "Professional Development", "Budget Planning"]
 featured: false
+ogImage: "/og-image.jpg"
+twitterImage: "/og-image.jpg"
+linkedinImage: "/og-image.jpg"
 ---
 
 Here's a question that might surprise you: What if the most expensive certification isn't the most valuable?

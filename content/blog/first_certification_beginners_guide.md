@@ -8,6 +8,9 @@ metaTitle: "Your First Certification 2025: Beginner's Guide to Strategic Selecti
 metaDescription: "Comprehensive decision-making framework for choosing your first certification. Prevent analysis paralysis with systematic selection criteria and strategic guidance for career advancement."
 tags: ["First Certification", "Beginner's Guide", "Career Development", "Decision Making", "Professional Development"]
 featured: false
+ogImage: "/og-image.jpg"
+twitterImage: "/og-image.jpg"
+linkedinImage: "/og-image.jpg"
 ---
 
 You're staring at hundreds of certification options and have no idea where to start.
