@@ -3,7 +3,7 @@
 @theme {
   --color-background: #ffffff;
   --color-foreground: #171717;
-  --font-family-sans: "Work Sans", system-ui, sans-serif;
+  --font-family-sans: var(--font-work-sans), system-ui, sans-serif;
   --font-family-mono: ui-monospace, "Cascadia Code", "Source Code Pro", Menlo,
     Consolas, "DejaVu Sans Mono", monospace;
 }
@@ -24,7 +24,7 @@ body {
 .blog-content h4,
 .blog-content h5,
 .blog-content h6 {
-  font-family: "Work Sans", system-ui, sans-serif;
+  font-family: var(--font-work-sans), system-ui, sans-serif;
   font-weight: 700;
   color: #1f2937;
   margin-bottom: 1rem;
@@ -265,7 +265,7 @@ body {
   margin-bottom: 1rem;
   font-weight: 700;
   font-size: 1.875rem; /* text-2xl */
-  font-family: "Work Sans", system-ui, sans-serif;
+  font-family: var(--font-work-sans), system-ui, sans-serif;
 }
 
 .blog-content .cta-section p {

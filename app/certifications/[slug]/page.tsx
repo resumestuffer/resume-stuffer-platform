@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import {
@@ -237,6 +238,54 @@ interface CertificationPageProps {
   params: { slug: string };
 }
 
+// Generate dynamic metadata for SEO
+export async function generateMetadata({
+  params,
+}: CertificationPageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const certification = await getCertification(slug);
+
+  if (!certification) {
+    return {
+      title: "Certification Not Found | Resume Stuffer",
+      description: "The requested certification could not be found.",
+    };
+  }
+
+  const title = `${certification.title} Certification Guide | Resume Stuffer`;
+  const description = `Complete guide to ${certification.title} certification. Cost: $${certification.price}, Study time: ${certification.studyTimeHours}h, Salary increase: +$${certification.salaryIncrease.toLocaleString()}/year. ${certification.shortDescription}`;
+
+  return {
+    title,
+    description,
+    keywords: `${certification.title}, certification, ${certification.category}, ${certification.provider?.name}, exam preparation, career advancement, salary increase`,
+    openGraph: {
+      title,
+      description,
+      url: `https://resumestuffer.com/certifications/${slug}`,
+      siteName: "Resume Stuffer",
+      type: "article",
+      images: [
+        {
+          url: "https://resumestuffer.com/og-image.jpg",
+          width: 1200,
+          height: 630,
+          alt: `${certification.title} Certification Guide`,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["https://resumestuffer.com/og-image.jpg"],
+    },
+    alternates: {
+      canonical: `https://resumestuffer.com/certifications/${slug}`,
+    },
+  };
+}
+
 export default async function CertificationPage({
   params,
 }: CertificationPageProps) {
@@ -259,11 +308,65 @@ export default async function CertificationPage({
     "adobe",
   ].includes(certification.provider.slug);
 
+  // Generate JSON-LD structured data for SEO
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    "name": certification.title,
+    "description": certification.description,
+    "provider": {
+      "@type": "Organization",
+      "name": certification.provider.name,
+      "url": certification.provider.website
+    },
+    "hasCourseInstance": {
+      "@type": "CourseInstance",
+      "courseMode": "online",
+      "instructor": {
+        "@type": "Organization",
+        "name": certification.provider.name
+      }
+    },
+    "educationalLevel": certification.experienceLevel,
+    "timeRequired": `PT${certification.studyTimeHours}H`,
+    "url": `https://resumestuffer.com/certifications/${certification.slug}`,
+    "potentialAction": {
+      "@type": "LearningResourceDisplayAction",
+      "target": certification.enrollUrl
+    },
+    "about": certification.keySkills?.map(skill => ({
+      "@type": "Thing",
+      "name": skill
+    })),
+    "teaches": certification.keySkills,
+    "aggregateRating": certification.passRate ? {
+      "@type": "AggregateRating",
+      "ratingValue": certification.passRate / 20, // Convert percentage to 5-star scale
+      "bestRating": 5,
+      "ratingCount": 100 // Placeholder - could be dynamic later
+    } : undefined,
+    "offers": {
+      "@type": "Offer",
+      "price": certification.price / 100,
+      "priceCurrency": "USD",
+      "category": "Educational",
+      "availability": "https://schema.org/InStock"
+    }
+  };
+
   return (
     <div
       className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50"
       style={{ fontFamily: "Work Sans, system-ui, sans-serif" }}
     >
+      {/* JSON-LD Structured Data */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(jsonLd),
+        }}
+      />
+
       {/* Header */}
       <MobileHeader />
 
