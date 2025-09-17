@@ -90,60 +90,145 @@ async function getCertification(slug: string) {
   }
 }
 
-// Helper function to build learning path context
+// Helper function to build complete learning path context
 async function buildLearningPathContext(certification: any) {
   if (!certification.prerequisiteCerts && !certification.nextCerts) {
     return null;
   }
 
   try {
-    // Get all prerequisite certifications
-    const prerequisites =
-      certification.prerequisiteCerts &&
-      certification.prerequisiteCerts.length > 0
-        ? await prisma.certification.findMany({
-            where: { slug: { in: certification.prerequisiteCerts } },
-            select: { slug: true, title: true },
-          })
-        : [];
+    // Build complete pathway by walking the entire chain
+    const completePath = await buildCompletePathway(certification);
 
-    // Get all next certifications
-    const nextCerts =
-      certification.nextCerts && certification.nextCerts.length > 0
-        ? await prisma.certification.findMany({
-            where: { slug: { in: certification.nextCerts } },
-            select: { slug: true, title: true },
-          })
-        : [];
+    if (!completePath || completePath.length <= 1) {
+      return null;
+    }
 
-    // Build complete learning path
-    const completePath = [
-      ...prerequisites.map((cert) => ({ ...cert, status: "prerequisite" })),
-      {
-        slug: certification.slug,
-        title: certification.title,
-        status: "current",
-      },
-      ...nextCerts.map((cert) => ({ ...cert, status: "next" })),
-    ];
-
-    const currentIndex = prerequisites.length;
-    const totalCertifications = completePath.length;
-
-    // Determine context window (±2 around current, minimum 5 total)
-    const contextStart = Math.max(0, currentIndex - 2);
-    const contextEnd = Math.min(totalCertifications, currentIndex + 3);
-    const contextPath = completePath.slice(contextStart, contextEnd);
+    const currentIndex = completePath.findIndex(cert => cert.slug === certification.slug);
 
     return {
       completePath,
-      contextPath,
+      contextPath: completePath, // Always show the complete path for consistency
       currentIndex,
-      totalCertifications,
-      showExpansion: totalCertifications > 5,
+      totalCertifications: completePath.length,
+      showExpansion: false, // No expansion needed since we show complete path
     };
   } catch (error) {
     console.error("Error building learning path:", error);
+    return null;
+  }
+}
+
+// Helper function to build complete pathway by walking the chain
+async function buildCompletePathway(certification: any) {
+  const visited = new Set();
+
+  // First, find the start of the pathway (cert with no prerequisites)
+  let current = certification;
+  const pathBackwards = [];
+
+  // Walk backwards through prerequisites
+  while (current && !visited.has(current.slug)) {
+    visited.add(current.slug);
+    pathBackwards.unshift({
+      slug: current.slug,
+      title: current.title,
+      status: current.slug === certification.slug ? "current" : "prerequisite"
+    });
+
+    if (current.prerequisiteCerts && current.prerequisiteCerts.length > 0) {
+      // Get the first prerequisite (assuming linear pathways)
+      const prereqSlug = current.prerequisiteCerts[0];
+      current = await prisma.certification.findUnique({
+        where: { slug: prereqSlug },
+        select: {
+          slug: true,
+          title: true,
+          prerequisiteCerts: true,
+          nextCerts: true
+        }
+      });
+    } else {
+      current = null;
+    }
+  }
+
+  // Now walk forwards from current certification to get next certs
+  current = certification;
+  const pathForwards = [];
+
+  if (current.nextCerts && current.nextCerts.length > 0) {
+    let nextSlug = current.nextCerts[0]; // Assuming linear pathways
+
+    while (nextSlug && !visited.has(nextSlug)) {
+      visited.add(nextSlug);
+      const nextCert = await prisma.certification.findUnique({
+        where: { slug: nextSlug },
+        select: {
+          slug: true,
+          title: true,
+          prerequisiteCerts: true,
+          nextCerts: true
+        }
+      });
+
+      if (nextCert) {
+        pathForwards.push({
+          slug: nextCert.slug,
+          title: nextCert.title,
+          status: "next"
+        });
+
+        nextSlug = nextCert.nextCerts && nextCert.nextCerts.length > 0
+          ? nextCert.nextCerts[0]
+          : null;
+      } else {
+        nextSlug = null;
+      }
+    }
+  }
+
+  return [...pathBackwards, ...pathForwards];
+}
+
+// Component to fetch and display complementary certifications with proper titles
+async function ComplementaryCertificationsSection({ complementaryCerts }: { complementaryCerts: string[] }) {
+  try {
+    const complementaryData = await prisma.certification.findMany({
+      where: { slug: { in: complementaryCerts } },
+      select: { slug: true, title: true }
+    });
+
+    return (
+      <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
+        <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+          <Target className="w-5 h-5 text-purple-600" />
+          Related Certifications
+        </h3>
+        <p className="text-sm text-slate-600 mb-4">
+          These certifications complement your learning journey and can be pursued in parallel:
+        </p>
+
+        <div className="space-y-2">
+          {complementaryData.map((cert) => (
+            <Link
+              key={cert.slug}
+              href={`/certifications/${cert.slug}`}
+              className="block p-3 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors border border-purple-200"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-sm font-medium text-purple-700">
+                  {cert.title}
+                </span>
+                <ExternalLink className="w-4 h-4 text-purple-500" />
+              </div>
+            </Link>
+          ))}
+        </div>
+      </div>
+    );
+  } catch (error) {
+    console.error('Error loading complementary certifications:', error);
     return null;
   }
 }
@@ -1006,29 +1091,12 @@ export default async function CertificationPage({
                 )}
               </div>
 
-              {/* Complementary Certifications - Only show if data exists */}
+              {/* Complementary Certifications - Only show if data exists and fetch actual titles */}
               {certification.complementaryCerts &&
                 certification.complementaryCerts.length > 0 && (
-                <div className="bg-white rounded-xl p-6 shadow-lg border border-slate-200">
-                  <h3 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
-                    <Target className="w-5 h-5 text-blue-600" />
-                    Complementary Certifications
-                  </h3>
-
-                  <div className="space-y-2">
-                    {certification.complementaryCerts.map((certSlug, index) => (
-                      <Link
-                        key={index}
-                        href={`/certifications/${certSlug}`}
-                        className="block p-3 bg-green-50 rounded-lg hover:bg-green-100 transition-colors"
-                      >
-                        <span className="text-sm font-medium text-green-700">
-                          Explore Related →
-                        </span>
-                      </Link>
-                    ))}
-                  </div>
-                </div>
+                <ComplementaryCertificationsSection
+                  complementaryCerts={certification.complementaryCerts}
+                />
               )}
 
 
