@@ -190,13 +190,10 @@ If you're currently certified but struggling with job searches:
 2. Research how your current and future certifications connect to solve real problems
 3. Develop your personal learning narrative: why this path, why these choices, why now
 
-<div class="cta-section">
-<h3>Turn Credentials Into Career Advancement</h3>
-<p>Ready to transform your certification strategy from credential collection to systematic career development? Our certification roadmaps help you plan strategic learning journeys that employers actually value.</p>
-<div class="cta-buttons">
-<a href="/certifications" class="cta-button-primary">Explore Strategic Certification Paths</a>
-<a href="/blog" class="cta-button-secondary">Read More Career Guides</a>
-</div>
+<div class="cta-section" style="background-color: #0f172a; padding: 2rem; border-radius: 0.75rem; text-align: center; margin: 2rem 0;">
+<h3 style="color: white; font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; font-family: Work Sans, system-ui, sans-serif;">Turn Credentials Into Career Advancement</h3>
+<p style="color: #cbd5e1; font-size: 1.125rem; margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">Ready to transform your certification strategy from credential collection to systematic career development? Find certifications that build strategic learning journeys employers actually value.</p>
+<a href="/certifications" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; background-color: #2563eb; color: white; font-weight: 600; border-radius: 0.5rem; text-decoration: none; transition: background-color 0.2s;">Find Your Strategic Certification</a>
 </div>
 
 The certification question isn't whether credentials guarantee jobs—it's whether you're building competence or just collecting certificates.

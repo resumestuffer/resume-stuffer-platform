@@ -278,13 +278,10 @@ The AI revolution has democratized access to personalized, sophisticated learnin
 
 Your certification opened the door. These prompts will help you walk through it with confidence.
 
-<div class="cta-section">
-<h3>Ready to Transform Your Certification Into Career Advancement?</h3>
-<p>These AI prompts are just the beginning. Discover strategic certification pathways that combine credentials with practical competence for maximum career impact.</p>
-<div class="cta-buttons">
-<a href="/certifications" class="cta-button-primary">Explore Strategic Certification Paths</a>
-<a href="/blog/beyond-the-certificate-why-learning-journey-matters" class="cta-button-secondary">Read: Why Your Learning Journey Matters</a>
-</div>
+<div class="cta-section" style="background-color: #0f172a; padding: 2rem; border-radius: 0.75rem; text-align: center; margin: 2rem 0;">
+<h3 style="color: white; font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; font-family: Work Sans, system-ui, sans-serif;">Ready to Transform Your Certification Into Career Advancement?</h3>
+<p style="color: #cbd5e1; font-size: 1.125rem; margin-bottom: 1.5rem; max-width: 600px; margin-left: auto; margin-right: auto;">These AI prompts are just the beginning. Find strategic certifications that combine credentials with practical competence for maximum career impact.</p>
+<a href="/certifications" style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 1rem 2rem; background-color: #2563eb; color: white; font-weight: 600; border-radius: 0.5rem; text-decoration: none; transition: background-color 0.2s;">Find Your Strategic Certification</a>
 </div>
 
 *Sources: IBM AI Education Research 2024, LinkedIn Learning Workplace Report 2024, Google Prompting Essentials Course, Global Knowledge IT Skills Survey 2024*
